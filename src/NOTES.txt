@@ -1,0 +1,10 @@
+Activat extension=php_sockets.dll a php.ini XAMP
+-Per iniciar el websocket arrencar http://localhost/api_casaamalia_v2/server_socket.php
+-Raonament iniciar websocket:
+Sí, al utilizar un enfoque basado en eventos en lugar de un bucle continuo, el servidor no se quedará inactivo 
+esperando una entrada y no desperdiciará recursos en ciclos vacíos. En resumen, este enfoque es más eficiente en 
+términos de recursos y rendimiento del servidor.
+
+-arrencar arxiu en server: php /ruta/al/archivo/server_socket.php &
+
+Revisar per instal·lar en server: F:\Backup UTILITARI\RECURSOS\WEBSOCKETS\CONFIGURACIÓ_WEBSOCKETS_SERVER.doc
