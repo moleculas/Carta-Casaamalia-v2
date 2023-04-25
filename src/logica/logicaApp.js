@@ -107,7 +107,7 @@ export const StyledMenu = withStyles({
     }),
 })((props) => (
     <Menu
-        elevation={0}        
+        elevation={0}
         anchorOrigin={{
             vertical: 'bottom',
             horizontal: 'center',
@@ -119,3 +119,14 @@ export const StyledMenu = withStyles({
         {...props}
     />
 ));
+
+export const replaceSingleQuotes = (obj) => {
+    for (let key in obj) {
+        if (typeof obj[key] === 'string') {
+            obj[key] = obj[key].replace(/'/g, '’');
+        } else if (typeof obj[key] === 'object') {
+            obj[key] = replaceSingleQuotes(obj[key]);
+        };
+    };
+    return obj;
+};

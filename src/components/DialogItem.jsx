@@ -41,7 +41,8 @@ import {
 } from '../redux/appDucks';
 import {
     a11yProps,
-    orientacioTabs
+    orientacioTabs,
+    replaceSingleQuotes
 } from '../logica/logicaApp';
 
 //constantes
@@ -221,20 +222,20 @@ const DialogItem = (props) => {
             visibilitat: valuesFormItem.visibilitat,
             modificat: new Date(),
             usuari
-        };
-        modeDialog === 'creacio' ? revisarRegistresCreacio(objTabla, objDatos) : revisarRegistresEdicio(objTabla, objDatos);
+        }; 
+        modeDialog === 'creacio' ? revisarRegistresCreacio(objTabla, replaceSingleQuotes(objDatos)) : revisarRegistresEdicio(objTabla, replaceSingleQuotes(objDatos));
     };
 
     const revisarRegistresEdicio = (objTabla, objDatos) => {
         const objDestacat = !estemAPlats || (objDatos.visibilitat === "1" && objDatos.destacat === "1") ? { estado: "si", ordre: itemsActivosDestacats + 1 } : { estado: "no", ordre: null };
         const sameVisibilityAndCategory = objDatos.visibilitat === item.visibilitat && objDatos.categoria === item.categoria;
-        if (sameVisibilityAndCategory) {
+        if (sameVisibilityAndCategory) {          
             dispatch(actualizarItem(objTabla, objDatos, objDestacat));
         } else {
-            if (objDatos.categoria !== item.categoria) {
+            if (objDatos.categoria !== item.categoria) {             
                 objDatos.ordre = 0;
                 objDatos.visibilitat = "0";
-            } else {
+            } else {                
                 objDatos.ordre = objDatos.visibilitat === "1" ? itemsActivosCat + 1 : 0;
             };
             dispatch(actualizarItemReordenar(objTabla, objDatos, objDestacat));
@@ -268,7 +269,7 @@ const DialogItem = (props) => {
     };
 
     return (
-        <Box>          
+        <Box>
             <Dialog
                 open={Boolean(openDialog === "item")}
                 onClose={handleCloseDialogItem}

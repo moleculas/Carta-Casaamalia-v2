@@ -30,8 +30,7 @@ import {
     a11yProps,
     useForceUpdate,
     Alert,
-    orientacioTabs,
-    useWebSocket
+    orientacioTabs
 } from '../logica/logicaApp';
 import {
     obtenerDatosInicial,
@@ -49,7 +48,7 @@ const Carta = (props) => {
     const navigate = useNavigate();
     const logged = useSelector(store => store.variablesUsuario.activo);
     const usuari = useSelector(store => store.variablesUsuario.usuarioActivo.nombre);
-    const { websocket, sendMessageWebSocket } = useWebSocket(usuari);
+    //const { websocket, sendMessageWebSocket } = useWebSocket(usuari);
     const {
         laDataCarta,
         titolsCarta,
@@ -66,8 +65,7 @@ const Carta = (props) => {
         ultimaIntervencion,
         ordenarItemsExito,
         canviCartaExito,
-        intervencioRegistre,
-        produccio
+        intervencioRegistre,     
     } = useSelector(store => store.variablesApp);
     const openLoading = useSelector(store => store.variablesApp.loadingApp);
     const [itemsCat1, setItemsCat1] = useState(null);
@@ -156,7 +154,7 @@ const Carta = (props) => {
         itemsCat3,
         itemsCat4,
         itemsCat5,
-        laDataCarta
+        laDataCarta       
     ]);
 
     useEffect(() => {
@@ -264,12 +262,12 @@ const Carta = (props) => {
         setValueTab(newValue);
     };
 
-    if (!isDataReady) {
+    if (!isDataReady || !titolsCarta) {
         return null
     };
 
     return (
-        <div>
+        <div>           
             <Backdrop className={classes.loading} open={openLoading} style={{ zIndex: 9999 }}>
                 <CircularProgress color="inherit" />
             </Backdrop>  
@@ -305,7 +303,7 @@ const Carta = (props) => {
                                     indicatorColor="secondary"
                                     textColor="inherit"
                                 >
-                                    <Tab label={titolsCarta[0][`titol_ca`]} {...a11yProps(0)} />
+                                    <Tab label={titolsCarta[0]['titol_ca']} {...a11yProps(0)} />
                                     <Tab label={titolsCarta[1][`titol_ca`]} {...a11yProps(1)} />
                                     <Tab label={titolsCarta[2][`titol_ca`]} {...a11yProps(2)} />
                                     <Tab label={titolsCarta[3][`titol_ca`]} {...a11yProps(3)} />

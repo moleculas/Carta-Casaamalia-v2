@@ -1,6 +1,6 @@
-# Getting Started with Create React App
+# Gestión Carta Restaurante
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Gestión digitalizada de carta para restaurante basada en [React](https://es.reactjs.org/) estilizada con [Material-UI](https://material-ui.com/). 
 
 ## Available Scripts
 

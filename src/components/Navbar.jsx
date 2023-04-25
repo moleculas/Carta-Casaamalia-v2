@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from "react-router-dom";
 import Constantes from "../constantes";
 import {
     IconButton,
@@ -28,22 +29,23 @@ import logo from '../images/logo_header.png';
 //importacion acciones
 import {
     setCustomDialog,
-    canviCarta
+    canviCarta,
+    resetApp
 } from '../redux/appDucks';
 
 //estilos
 import Clases from "../clases";
 
 //constantes
-const {
-    TIPUS_CARTA: tipusCarta
-} = Constantes;
+const { TIPUS_CARTA: tipusCarta } = Constantes;
 
 const Navbar = (props) => {
     const classes = Clases();
     const dispatch = useDispatch();
+    const navigate = useNavigate();
     const { cartaGeneral } = useSelector(store => store.variablesApp);
     const logged = useSelector(store => store.variablesUsuario.activo);
+    const usuari = useSelector(store => store.variablesUsuario.usuarioActivo.nombre);
     const options = tipusCarta;
     const [openMenuCarta, setOpenMenuCarta] = useState(false);
     const anchorRef = useRef(null);
@@ -63,7 +65,8 @@ const Navbar = (props) => {
             setOpenMenuCarta(false);
             dispatch(canviCarta(options[index])).then(({ payload }) => {
                 if (payload) {
-                    window.location.reload();
+                    dispatch(resetApp());
+                    navigate('/');
                 };
             });
         };
@@ -90,7 +93,7 @@ const Navbar = (props) => {
         <AppBar className={classes.appBar} color={cartaGeneral?.tipus === "nadal" ? "custom" : "primary"}>
             <Toolbar>
                 <IconButton
-                    color="inherit"                  
+                    color="inherit"
                     className={classes.menuButton}
                     onClick={() => props.accionAbrir()}
                 >
@@ -112,6 +115,7 @@ const Navbar = (props) => {
                             color={cartaGeneral?.tipus === "nadal" ? "custom" : "primary"}
                             disableElevation
                             className={classes.ombra}
+                            disabled={usuari !== "admin" && usuari !== "sergi"}
                         >
                             <Button sx={{ pointerEvents: "none" }}>{options[selectedIndex]}</Button>
                             <Button

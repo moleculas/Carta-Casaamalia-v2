@@ -55,7 +55,8 @@ import {
 import {
     a11yProps,
     orientacioTabs,
-    TabPanel
+    TabPanel,
+    replaceSingleQuotes
 } from '../logica/logicaApp';
 
 const DialogEditable = (props) => {
@@ -240,8 +241,8 @@ const DialogEditable = (props) => {
             usuari
         };
         modeDialogEditable === 'creacio' ?
-            dispatch(registrarEditable(element, objDatos)) :
-            dispatch(actualitzarEditable(element, objDatos));
+            dispatch(registrarEditable(element, replaceSingleQuotes(objDatos))) :
+            dispatch(actualitzarEditable(element, replaceSingleQuotes(objDatos)));
         resetDialog();
     };
 
@@ -552,7 +553,7 @@ const DialogEditable = (props) => {
                                         color="text.secondary"
                                         className={classes.fuentePequena}
                                     >
-                                        Llistat productes
+                                        Llistat producció
                                     </Typography>
 
                                 </Stack>

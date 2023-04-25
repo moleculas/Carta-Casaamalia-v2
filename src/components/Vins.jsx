@@ -29,8 +29,7 @@ import {
     TabPanel,
     a11yProps,
     useForceUpdate,
-    Alert,
-    useWebSocket,
+    Alert,   
     orientacioTabs
 } from '../logica/logicaApp';
 import {
@@ -47,7 +46,7 @@ const Vins = (props) => {
     const navigate = useNavigate();
     const logged = useSelector(store => store.variablesUsuario.activo);
     const usuari = useSelector(store => store.variablesUsuario.usuarioActivo.nombre);
-    const { websocket, sendMessageWebSocket } = useWebSocket(usuari);
+    //const { websocket, sendMessageWebSocket } = useWebSocket(usuari);
     const {
         laDataVins,
         titolsVins,
@@ -239,7 +238,7 @@ const Vins = (props) => {
         setValueTab(newValue);
     };
 
-    if (!isDataReady) {
+    if (!isDataReady || !titolsVins) {
         return null
     };
 

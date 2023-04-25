@@ -14,16 +14,12 @@ import {
     LockOpen,
     SubdirectoryArrowRight
 } from '@mui/icons-material';
+import clsx from 'clsx';
 
 //importaciones acciones
 import { logoutUsuarioAccion } from '../redux/usuarioDucks';
-import {   
-    setLaDataCarta,
-    setLaDataVins,
-    setTitolsCarta,
-    setTitolsVins,
-    setCartaGeneral
-} from '../redux/appDucks';
+import { resetApp } from '../redux/appDucks';
+import useInactivityTimer from '../logica/useInactivityTimer';
 
 //estilos
 import Clases from "../clases";
@@ -36,16 +32,13 @@ const Menu = (props) => {
 
     //funciones
 
-    const tancarSessio = () => {        
-        dispatch(setLaDataCarta(null));
-        dispatch(setLaDataVins(null));
-        dispatch(setTitolsCarta([]));
-        dispatch(setTitolsVins([]));
+    const tancarSessio = () => {
+        dispatch(resetApp());
         dispatch(logoutUsuarioAccion());
-        dispatch(setCartaGeneral(null));
         localStorage.clear();
         navigate('/login');
     };
+    const [tiempoAlarma, timer] = useInactivityTimer(tancarSessio, logged);
 
     return (
         <div>
@@ -79,7 +72,6 @@ const Menu = (props) => {
                         </a>
                     </div>
                 ) : null}
-
                 <ListItemButton
                     onClick={tancarSessio}
                 >
@@ -87,7 +79,10 @@ const Menu = (props) => {
                         <LockOpen />
                     </ListItemIcon>
                     <ListItemText primary={logged ? (
-                        <Typography component={'span'}>{`Logout `}</Typography>
+                        <>
+                            <Typography component="span">{`Logout `}</Typography>
+                            <Typography className={clsx(tiempoAlarma && (classes.alarma))} component="span">{`(${timer})`}</Typography>
+                        </>
                     ) : ('Login')} />
                 </ListItemButton>
                 <Divider />

@@ -27,6 +27,7 @@ import {
     setImatgeSeleccionada,
     actualizarPrincipal
 } from '../redux/appDucks';
+import { replaceSingleQuotes } from '../logica/logicaApp';
 
 //constantes
 const {
@@ -95,7 +96,7 @@ const DialogPrincipal = (props) => {
 
     const processarDadesPrincipal = (e) => {
         e.preventDefault();
-        dispatch(actualizarPrincipal('carta', {
+        const objDatos = {
             ...cartaGeneral,
             ...(estemAPlats && ({
                 nom_plats_ca: valuesFormPrincipal.ca,
@@ -113,7 +114,8 @@ const DialogPrincipal = (props) => {
             })),
             modificat: new Date(),
             usuari
-        }));
+        };
+        dispatch(actualizarPrincipal('carta', replaceSingleQuotes(objDatos)));
         handleCloseDialogPrincipal();
     };
 
@@ -122,7 +124,7 @@ const DialogPrincipal = (props) => {
     };
 
     return (
-        <Box>           
+        <Box>
             <Dialog
                 open={Boolean(openDialog === "principal")}
                 onClose={handleCloseDialogPrincipal}

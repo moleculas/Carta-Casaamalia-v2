@@ -102,12 +102,18 @@ const Medis = (props) => {
 
     //funciones
 
-    const handleChangeImage = (e) => {
+    const renameImageFile = (file) => {
+        const newFileName = file.name.replace(/'/g, '-');
+        return new File([file], newFileName, { type: file.type });
+    };
+
+    const handleChangeImage = (e) => {     
+        const imatgeGest = renameImageFile(e.target.files[0]);
         const img = new Image();
-        img.src = URL.createObjectURL(e.target.files[0]);
+        img.src = URL.createObjectURL(imatgeGest);
         img.onload = () => {
             const { width, height } = img;
-            const pesBrut = e.target.files[0].size;
+            const pesBrut = imatgeGest.size;
             if (pesBrut >= 10485760) {
                 dispatch(setAlertaAccion({
                     abierto: true,
@@ -149,8 +155,8 @@ const Medis = (props) => {
                 return
             };
         };
-        setTitolBotoImatge(e.target.files[0].name);
-        setFile(e.target.files[0]);
+        setTitolBotoImatge(imatgeGest.name);
+        setFile(imatgeGest);
         setBotonsDesactivats({ seleccionar: true, pujar: false });
     };
 
@@ -214,7 +220,7 @@ const Medis = (props) => {
                             className={classes.root1}
                         >
                             <div>
-                                {imatges && (
+                                {(imatges && openMedis.estado) && (
                                     <ImatgesMedis
                                         dir={openMedis.dir}
                                         configDir={configDir}

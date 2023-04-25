@@ -8,3 +8,32 @@ términos de recursos y rendimiento del servidor.
 -arrencar arxiu en server: php /ruta/al/archivo/server_socket.php &
 
 Revisar per instal·lar en server: F:\Backup UTILITARI\RECURSOS\WEBSOCKETS\CONFIGURACIÓ_WEBSOCKETS_SERVER.doc
+
+-CANVIS desenvolupament-producció: 
+canviar .env.production.local de 
+PUBLIC_URL=https://carta.casaamalia.com/test/gestio
+a
+PUBLIC_URL=https://carta.casaamalia.com/gestio
+
+-en el cas que es produeixi a test primer: 
+-canviar const subdirectoriProduccio = '/gestio'; per const subdirectoriProduccio = '/test/gestio'; 
+-canviar rutaServer a env.producció
+if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
+    rutaApi = "http://localhost/api_casaamalia_v2/";
+    rutaServer = "http://localhost/api_casaamalia_v2/";
+} else {
+    const preRutaServer = window.location.protocol + "//" + window.location.host + "/test/gestio";
+    rutaApi = preRutaServer + "/api/";
+    rutaServer = preRutaServer + "/api/";
+};
+
+-En lloc de canviar package.json "homepage", es configura la variable PUBLIC_URL a 
+.env.development.local
+.env.production.local
+i es posa  <base href="%PUBLIC_URL%/"> al head d'index.html
+
+-Canviar .htaccess 
+de
+RewriteRule ^ test/gestio/index.html [L]
+a
+RewriteRule ^ gestio/index.html [L]

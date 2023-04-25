@@ -8,8 +8,8 @@ const dataInicial = {
     loadingApp: false,
     laDataCarta: null,
     laDataVins: null,
-    titolsCarta: [],
-    titolsVins: [],
+    titolsCarta: null,
+    titolsVins: null,
     produccio: null,
     parades: null,
     cartaGeneral: null,
@@ -184,7 +184,7 @@ const determinaRutaServer = (configDir) => {
     let ruta;
     if (configDir.format === "parades") {
         ruta = 'images/parades/'
-    }else if (configDir.format === "produccio") {
+    } else if (configDir.format === "produccio") {
         ruta = 'images/produccio/'
     } else {
         ruta = configDir.carta === 'normal'
@@ -388,7 +388,7 @@ export const actualizarItem = (objeto, datos, objDestacat) => async (dispatch, g
         formData.append("objeto", objeto);
         formData.append("id", datos.id);
         formData.append("destacat", destacat);
-        formData.append("datos", losDatos);
+        formData.append("datos", losDatos);       
         let apiUrl = rutaApi + "actualizar.php";
         const res = await axios.post(apiUrl, formData, {
             headers: {
@@ -888,18 +888,14 @@ export const setLaDataVins = (valor) => (dispatch, getState) => {
 export const setTitolsCarta = (array) => (dispatch, getState) => {
     dispatch({
         type: SET_TITOLSCARTA,
-        payload: {
-            array
-        }
+        payload: array
     });
 };
 
 export const setTitolsVins = (array) => (dispatch, getState) => {
     dispatch({
         type: SET_TITOLSVINS,
-        payload: {
-            array
-        }
+        payload: array
     });
 };
 
@@ -968,4 +964,32 @@ export const resetIIntervencioRegistre = () => (dispatch, getState) => {
         type: SET_INTERVENCIOREGISTRE,
         payload: false
     });
+};
+
+export const resetApp = () => (dispatch, getState) => {
+    const actions = [
+        { type: SET_LADATACARTA, payload: null },
+        { type: SET_LADATAVINS, payload: null },
+        { type: SET_TITOLSCARTA, payload: null },
+        { type: SET_TITOLSCARTA, payload: null },
+        { type: SET_PRODUCCIO, payload: null },
+        { type: SET_PARADES, payload: null },
+        { type: SET_OPENMEDIS, payload: { estado: false, dir: null } },
+        { type: SET_OPENDIALOG, payload: null },
+        { type: SET_IMATGES, payload: null },
+        { 
+          type: SET_CUSTOMDIALOG, 
+          payload: { objeto: { abierto: false, titulo: "", mensaje: "", funcionSi: null } } 
+        },
+        { type: SET_IMATGESELECCIONADA, payload: null },
+        { type: SET_CARTAGENERAL, payload: null },
+        { type: SET_MODEDIALOG, payload: null },
+        { type: SET_ITEMEDITAR, payload: null },
+        { type: SET_ULTIMAINTERVENCION, payload: null },
+        { type: SET_ITEMSACTIVOSCAT, payload: null },
+        { type: SET_INTERVENCIOREGISTRE, payload: false },
+        { type: SET_ITEMSACTIVOSDESTACATS, payload: null },
+        { type: RESETEA_EXITO }
+    ];
+    actions.forEach(action => dispatch(action));
 };

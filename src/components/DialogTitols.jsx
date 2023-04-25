@@ -27,6 +27,7 @@ import {
     setOpenMedis,
     setImatgeSeleccionada
 } from '../redux/appDucks';
+import { replaceSingleQuotes } from '../logica/logicaApp';
 
 //constantes
 const {
@@ -90,7 +91,7 @@ const DialogTitols = (props) => {
 
     const handleCloseDialogTitols = () => {
         dispatch(setOpenDialog(null));
-        setValuesFormTitols( Array.from({ length }).map((_, i) => ({
+        setValuesFormTitols(Array.from({ length }).map((_, i) => ({
             ca: "",
             es: "",
             en: "",
@@ -114,7 +115,7 @@ const DialogTitols = (props) => {
     const processarDadesTitol = (e) => {
         e.preventDefault();
         const arr = valuesFormTitols.map((titol, index) => {
-            return {               
+            return replaceSingleQuotes({
                 ...(estemAPlats && ({
                     ...titolsCarta[index]
                 })),
@@ -130,7 +131,7 @@ const DialogTitols = (props) => {
                     imatge: valuesFormTitols[valueTab].imatge
                 })),
                 usuari
-            }
+            })
         });
         handleCloseDialogTitols();
         dispatch(actualizarTitol('categories', arr[valueTab]));
