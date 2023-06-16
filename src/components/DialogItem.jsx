@@ -52,7 +52,8 @@ const DialogItem = (props) => {
     const {
         estemAPlats,
         estemAVins,
-        valueTab
+        valueTab,
+        categoria
     } = props;
     const classes = Clases();
     const dispatch = useDispatch();
@@ -92,6 +93,7 @@ const DialogItem = (props) => {
                 denominacio: modeDialog === "edicio" ? item.denominacio : "",
                 puntuacio_pr: modeDialog === "edicio" ? item.puntuacio_pr : "0",
                 puntuacio_pe: modeDialog === "edicio" ? item.puntuacio_pe : "0",
+                zona: modeDialog === "edicio" ? (item.zona ? item.zona : "No") : "No"
             })),
             preu: modeDialog === "edicio" ? item.preu : "",
             visibilitat: modeDialog === "edicio" ? item.visibilitat : "1",
@@ -144,6 +146,7 @@ const DialogItem = (props) => {
                     denominacio: "",
                     puntuacio_pr: "0",
                     puntuacio_pe: "0",
+                    zona: "No",
                 })),
                 preu: "",
                 visibilitat: "1",
@@ -211,7 +214,8 @@ const DialogItem = (props) => {
                 nom: valuesFormItem.nom,
                 denominacio: valuesFormItem.denominacio,
                 puntuacio_pr: valuesFormItem.puntuacio_pr,
-                puntuacio_pe: valuesFormItem.puntuacio_pe
+                puntuacio_pe: valuesFormItem.puntuacio_pe,
+                zona: valuesFormItem.zona === "No" ? null : valuesFormItem.zona
             })),
             descripcio_ca: valuesFormItem.descripcio_ca,
             descripcio_es: valuesFormItem.descripcio_es,
@@ -222,20 +226,20 @@ const DialogItem = (props) => {
             visibilitat: valuesFormItem.visibilitat,
             modificat: new Date(),
             usuari
-        }; 
+        };
         modeDialog === 'creacio' ? revisarRegistresCreacio(objTabla, replaceSingleQuotes(objDatos)) : revisarRegistresEdicio(objTabla, replaceSingleQuotes(objDatos));
     };
 
     const revisarRegistresEdicio = (objTabla, objDatos) => {
         const objDestacat = !estemAPlats || (objDatos.visibilitat === "1" && objDatos.destacat === "1") ? { estado: "si", ordre: itemsActivosDestacats + 1 } : { estado: "no", ordre: null };
         const sameVisibilityAndCategory = objDatos.visibilitat === item.visibilitat && objDatos.categoria === item.categoria;
-        if (sameVisibilityAndCategory) {          
+        if (sameVisibilityAndCategory) {
             dispatch(actualizarItem(objTabla, objDatos, objDestacat));
         } else {
-            if (objDatos.categoria !== item.categoria) {             
+            if (objDatos.categoria !== item.categoria) {
                 objDatos.ordre = 0;
                 objDatos.visibilitat = "0";
-            } else {                
+            } else {
                 objDatos.ordre = objDatos.visibilitat === "1" ? itemsActivosCat + 1 : 0;
             };
             dispatch(actualizarItemReordenar(objTabla, objDatos, objDestacat));
@@ -338,6 +342,7 @@ const DialogItem = (props) => {
                                 valueTab2={valueTab2}
                                 valuesFormItem={valuesFormItem}
                                 setValuesFormItem={setValuesFormItem}
+                                categoria={categoria}
                             />
                         )}
                         <Button

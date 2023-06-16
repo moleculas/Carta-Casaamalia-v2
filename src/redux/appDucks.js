@@ -12,6 +12,7 @@ const dataInicial = {
     titolsVins: null,
     produccio: null,
     parades: null,
+    zones: null,
     cartaGeneral: null,
     onEstem: null,
     alerta: {
@@ -68,6 +69,7 @@ const SET_TITOLSCARTA = "SET_TITOLSCARTA";
 const SET_TITOLSVINS = "SET_TITOLSVINS";
 const SET_PRODUCCIO = "SET_PRODUCCIO";
 const SET_PARADES = "SET_PARADES";
+const SET_ZONES = "SET_ZONES";
 const SET_OPENLOADING = "SET_OPENLOADING";
 const SET_OPENDIALOG = "SET_OPENDIALOG";
 const SET_OPENMEDIS = "SET_OPENMEDIS";
@@ -136,6 +138,8 @@ export default function appReducer(state = dataInicial, action) {
             return { ...state, produccio: action.payload }
         case SET_PARADES:
             return { ...state, parades: action.payload }
+        case SET_ZONES:
+            return { ...state, zones: action.payload }
         case SET_OPENLOADING:
             return { ...state, loadingApp: action.payload.valor }
         case SET_OPENDIALOG:
@@ -186,6 +190,8 @@ const determinaRutaServer = (configDir) => {
         ruta = 'images/parades/'
     } else if (configDir.format === "produccio") {
         ruta = 'images/produccio/'
+    } else if (configDir.format === "zones") {
+        ruta = 'images/zones/'
     } else {
         ruta = configDir.carta === 'normal'
             ? configDir.tipus === 'plats'
@@ -213,16 +219,19 @@ export const obtenerDatosInicial = (tipo) => async (dispatch, getState) => {
         const formData1 = new FormData();
         const formData2 = new FormData();
         const formData3 = new FormData();
+        const formData4 = new FormData();
         const carta = cartaGeneral?.tipus || (await obtenerCartaInicial(formData1));
         formData1.append("carta", carta);
         formData1.append("tipo", tipo);
         formData2.append("objeto", "produccio");
         formData3.append("objeto", "parades");
-        const [items, titols, produccio, parades] = await Promise.all([
+        formData4.append("objeto", "zones");
+        const [items, titols, produccio, parades, zones] = await Promise.all([
             obtenerCarta(formData1),
             obtenerTitulos(formData1),
             tipo === "plats" ? obtenerProduccio(formData2) : null,
-            tipo === "plats" ? obtenerParades(formData3) : null
+            tipo === "plats" ? obtenerParades(formData3) : null,
+            tipo === "vins" ? obtenerZones(formData4) : null
         ]);
         switch (tipo) {
             case "plats":
@@ -246,6 +255,7 @@ export const obtenerDatosInicial = (tipo) => async (dispatch, getState) => {
             case "vins":
                 dispatch({ type: SET_LADATAVINS, payload: items });
                 dispatch({ type: SET_TITOLSVINS, payload: titols });
+                dispatch({ type: SET_ZONES, payload: zones });
                 break;
             default:
                 break;
@@ -283,6 +293,12 @@ export const obtenerDatosInicial = (tipo) => async (dispatch, getState) => {
         return data;
     };
     async function obtenerParades(formData) {
+        const { data } = await axios.post(rutaApi + "obtener_editable.php", formData, {
+            headers: { "Content-Type": "multipart/form-data" },
+        });
+        return data;
+    };
+    async function obtenerZones(formData) {
         const { data } = await axios.post(rutaApi + "obtener_editable.php", formData, {
             headers: { "Content-Type": "multipart/form-data" },
         });
@@ -388,7 +404,7 @@ export const actualizarItem = (objeto, datos, objDestacat) => async (dispatch, g
         formData.append("objeto", objeto);
         formData.append("id", datos.id);
         formData.append("destacat", destacat);
-        formData.append("datos", losDatos);       
+        formData.append("datos", losDatos);
         let apiUrl = rutaApi + "actualizar.php";
         const res = await axios.post(apiUrl, formData, {
             headers: {
@@ -614,6 +630,37 @@ export const registrarEditable = (objeto, datos) => async (dispatch, getState) =
     }
 };
 
+export const registrarZona = (datos) => async (dispatch, getState) => {
+    dispatch({ type: LOADING_APP, payload: true });
+    try {
+        const losDatos = JSON.stringify(datos);
+        const formData = new FormData();
+        formData.append("objeto", "zones");
+        formData.append("datos", losDatos);
+        let apiUrl = rutaApi + "registrar.php";
+        const res = await axios.post(apiUrl, formData, {
+            headers: {
+                "Content-Type": "multipart/form-data",
+            }
+        });
+        if (res.data) {
+            dispatch({
+                type: REGISTRAR_ITEM_EXITO
+            });
+            dispatch({
+                type: SET_ZONES,
+                payload: res.data
+            });
+            dispatch(ultimaIntervencion());
+            dispatch({ type: LOADING_APP, payload: false });
+        };
+    } catch (error) {
+        dispatch({
+            type: ERROR_DE_CARGA
+        })
+    }
+};
+
 export const actualitzarEditable = (objeto, datos) => async (dispatch, getState) => {
     dispatch({ type: LOADING_APP, payload: true });
     try {
@@ -654,6 +701,38 @@ export const actualitzarEditable = (objeto, datos) => async (dispatch, getState)
     };
 };
 
+export const actualitzarZona = (datos) => async (dispatch, getState) => {
+    dispatch({ type: LOADING_APP, payload: true });
+    try {
+        const losDatos = JSON.stringify(datos);
+        const formData = new FormData();
+        formData.append("objeto", "zones");
+        formData.append("id", datos.id);
+        formData.append("datos", losDatos);
+        let apiUrl = rutaApi + "actualizar.php";
+        const res = await axios.post(apiUrl, formData, {
+            headers: {
+                "Content-Type": "multipart/form-data",
+            }
+        });
+        if (res.data) {
+            dispatch({
+                type: ACTUALIZAR_ITEM_EXITO
+            });
+            dispatch({
+                type: SET_ZONES,
+                payload: res.data
+            });
+            dispatch(ultimaIntervencion());
+            dispatch({ type: LOADING_APP, payload: false });
+        };
+    } catch (error) {
+        dispatch({
+            type: ERROR_DE_CARGA
+        })
+    };
+};
+
 export const eliminarEditable = (objeto, id) => async (dispatch, getState) => {
     dispatch({ type: LOADING_APP, payload: true });
     try {
@@ -672,12 +751,13 @@ export const eliminarEditable = (objeto, id) => async (dispatch, getState) => {
             });
             const actionsMap = {
                 produccio: SET_PRODUCCIO,
-                parades: SET_PARADES
+                parades: SET_PARADES,
+                zones: SET_ZONES
             };
             const actionType = actionsMap[objeto];
             dispatch({
                 type: actionType,
-                payload: res.data.map(item => ({
+                payload: objeto === "zones" ? res.data : res.data.map(item => ({
                     ...item,
                     imatges: JSON.parse(item.imatges)
                 }))
@@ -721,7 +801,7 @@ export const uploadImatge = (file, configDir) => async (dispatch, getState) => {
     try {
         const ruta = determinaRutaServer(configDir);
         const esHeader = configDir.format === 'header' ? "si" : "no";
-        const esEditable = configDir.format === 'produccio' || configDir.format === 'parades' ? "si" : "no";
+        const esEditable = configDir.format === 'produccio' || configDir.format === 'parades' || configDir.format === 'zones' ? "si" : "no";
         const formData = new FormData();
         formData.append("file", file);
         formData.append("ruta", ruta);
@@ -974,12 +1054,13 @@ export const resetApp = () => (dispatch, getState) => {
         { type: SET_TITOLSCARTA, payload: null },
         { type: SET_PRODUCCIO, payload: null },
         { type: SET_PARADES, payload: null },
+        { type: SET_ZONES, payload: null },
         { type: SET_OPENMEDIS, payload: { estado: false, dir: null } },
         { type: SET_OPENDIALOG, payload: null },
         { type: SET_IMATGES, payload: null },
-        { 
-          type: SET_CUSTOMDIALOG, 
-          payload: { objeto: { abierto: false, titulo: "", mensaje: "", funcionSi: null } } 
+        {
+            type: SET_CUSTOMDIALOG,
+            payload: { objeto: { abierto: false, titulo: "", mensaje: "", funcionSi: null } }
         },
         { type: SET_IMATGESELECCIONADA, payload: null },
         { type: SET_CARTAGENERAL, payload: null },

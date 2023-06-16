@@ -61,11 +61,12 @@ const Medis = (props) => {
                     dispatch(obtenerImatges(openMedis.dir));
                     setConfigDir({
                         carta: openMedis.dir.includes("nadal") ? "nadal" : "normal",
-                        tipus: openMedis.dir.includes("vins") ? "vins" : "plats",
+                        tipus: openMedis.dir.includes("vins") ? "vins" : openMedis.dir.includes("plats") ? "plats" : "-",
                         format: openMedis.dir.includes("header") ? "header" :
                             openMedis.dir.includes("produccio") ? "produccio" :
                                 openMedis.dir.includes("parades") ? "parades" :
-                                    "normal"
+                                    openMedis.dir.includes("zones") ? "zones" :
+                                        "normal"
                     });
                 };
             });
@@ -107,7 +108,7 @@ const Medis = (props) => {
         return new File([file], newFileName, { type: file.type });
     };
 
-    const handleChangeImage = (e) => {     
+    const handleChangeImage = (e) => {
         const imatgeGest = renameImageFile(e.target.files[0]);
         const img = new Image();
         img.src = URL.createObjectURL(imatgeGest);

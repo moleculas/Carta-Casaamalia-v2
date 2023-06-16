@@ -48,8 +48,31 @@ const ImatgesMedis = (props) => {
                     const LaCard = (props) => {
                         const { imatge } = props;
                         const [lightboxOpenMedis, setLightboxOpenMedis] = useState(false);
-                        return (
-                            <Grid item xs={12} sm={6} md={4} lg={3} xl={2} key={imatge}>
+                        const retornaNumeracioGrid = (mida) => {
+                            if (imatges.length < 6) {
+                                switch (mida) {
+                                    case "md":
+                                        return imatges.length === 1 ? 12 : 6;
+                                    case "lg":
+                                        return imatges.length === 1 ? 12 :
+                                            imatges.length === 2 ? 6 :
+                                                imatges.length === 3 ? 4 :
+                                                    3;
+                                    case "xl":
+                                        return imatges.length === 1 ? 12 :
+                                            imatges.length === 2 ? 6 :
+                                                imatges.length === 3 ? 4 :
+                                                    imatges.length === 5 ? 2 :
+                                                        3;
+                                    default:
+                                        break;
+                                };
+                            } else {
+                                return mida === "md" ? 3 : mida === "lg" ? 4 : mida === "xl" ? 2 : undefined;
+                            };
+                        };
+                        return (                         
+                            <Grid item xs={12} sm={12} md={retornaNumeracioGrid("md")} lg={retornaNumeracioGrid("lg")} xl={retornaNumeracioGrid("xl")} key={imatge}>
                                 <Card className={classes.efectoHover}>
                                     <CardMedia
                                         component="img"

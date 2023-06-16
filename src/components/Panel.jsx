@@ -18,6 +18,7 @@ import DialogTitols from './DialogTitols';
 import Medis from './Medis';
 import DialogItem from './DialogItem';
 import DialogEditable from './DialogEditable';
+import DialogZones from './DialogZones';
 
 //estilos
 import Clases from "../clases";
@@ -47,7 +48,8 @@ const Panel = (props) => {
         cartaGeneral,
         itemsActivosCat,
         produccio,
-        parades
+        parades,
+        zones
     } = useSelector(store => store.variablesApp);
     const [itemsOrdenables, setItemsOrdenables] = useState(null);
     const [anchorElMenu, setAnchorElMenu] = useState(null);
@@ -66,7 +68,6 @@ const Panel = (props) => {
     }, [items]);
 
     //funciones    
-
 
     const handleToggleMenu = (e) => {
         setAnchorElMenu(anchorElMenu ? null : e.currentTarget)
@@ -165,18 +166,27 @@ const Panel = (props) => {
                             >
                                 <ListItemText primary="Crear registre" />
                             </MenuItem>
-                            <MenuItem
-                                onClick={() => { handleCloseMenu(); dispatch(setOpenDialog("produccio")) }}
-                                disabled={Boolean(estemAVins)}
-                            >
-                                <ListItemText primary="Gestionar producció" />
-                            </MenuItem>
-                            <MenuItem
-                                onClick={() => { handleCloseMenu(); dispatch(setOpenDialog("parades")) }}
-                                disabled={Boolean(estemAVins)}
-                            >
-                                <ListItemText primary="Gestionar parades" />
-                            </MenuItem>
+                            {estemAPlats && (
+                                <MenuItem
+                                    onClick={() => { handleCloseMenu(); dispatch(setOpenDialog("produccio")) }}
+                                >
+                                    <ListItemText primary="Gestionar producció" />
+                                </MenuItem>
+                            )}
+                            {estemAPlats && (
+                                <MenuItem
+                                    onClick={() => { handleCloseMenu(); dispatch(setOpenDialog("parades")) }}
+                                >
+                                    <ListItemText primary="Gestionar parades" />
+                                </MenuItem>
+                            )}
+                            {estemAVins && (
+                                <MenuItem
+                                    onClick={() => { handleCloseMenu(); dispatch(setOpenDialog("zones")) }}
+                                >
+                                    <ListItemText primary={`Gestionar zones - ${titolsVins[valueTab][`titol_ca`]}`} />
+                                </MenuItem>
+                            )}
                         </StyledMenu>
                     </FormControl>
                 </Box>
@@ -200,6 +210,7 @@ const Panel = (props) => {
                                                 cartaGeneral={cartaGeneral}
                                                 produccio={produccio}
                                                 parades={parades}
+                                                zones={zones}
                                             />
                                         </Box>
                                     )
@@ -225,13 +236,17 @@ const Panel = (props) => {
                     estemAPlats={estemAPlats}
                     estemAVins={estemAVins}
                     valueTab={valueTab}
+                    categoria={estemAVins ? titolsVins?.[valueTab][`titol_ca`] : null}
                 />
             )}
             {openDialog === "produccio" && (
                 <DialogEditable element={"produccio"} />
             )}
-             {openDialog === "parades" && (
+            {openDialog === "parades" && (
                 <DialogEditable element={"parades"} />
+            )}
+            {openDialog === "zones" && (
+                <DialogZones categoria={titolsVins?.[valueTab][`titol_ca`]} />
             )}
         </div>
     )

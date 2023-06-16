@@ -35,15 +35,18 @@ const DialogItemFormVins = (props) => {
         valueTab,
         valueTab2,
         valuesFormItem,
-        setValuesFormItem
+        setValuesFormItem,
+        categoria
     } = props;
     const classes = Clases();
     const {
         modeDialog,
         titolsVins,
-        cartaGeneral
+        cartaGeneral,
+        zones
     } = useSelector(store => store.variablesApp);
     const rutaImatges = `${rutaServer}images/vins_imatges/`;
+    const arrZones = zones.filter((obj) => obj.categoria === categoria);
 
     //funciones
 
@@ -55,7 +58,7 @@ const DialogItemFormVins = (props) => {
     };
 
     return (
-        <Fragment >
+        <Fragment>            
             <TabPanel value={valueTab2} index={0}>
                 <FormControl
                     className={classes.form}
@@ -276,6 +279,29 @@ const DialogItemFormVins = (props) => {
                                 {puntuacio.map((option) => (
                                     <MenuItem key={option.value} value={option.value}>
                                         {option.label}
+                                    </MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl>
+                        <FormControl
+                            fullWidth
+                            className={classes.form}
+                            sx={{ mt: 1 }}
+                            variant="standard"
+                        >
+                            <InputLabel>Zona</InputLabel>
+                            <Select
+                                fullWidth
+                                //displayEmpty
+                                value={valuesFormItem.zona}
+                                onChange={handleChangeFormItem('zona')}
+                            >
+                                <MenuItem value="No">
+                                    No
+                                </MenuItem>
+                                {arrZones.map((option) => (
+                                    <MenuItem key={option.id} value={option.id}>
+                                        {option.titol_ca}
                                     </MenuItem>
                                 ))}
                             </Select>

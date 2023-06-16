@@ -54,7 +54,8 @@ const Item = (props) => {
         valueTab,
         cartaGeneral,
         produccio,
-        parades
+        parades,
+        zones
     } = props;
     const classes = Clases();
     const dispatch = useDispatch();
@@ -94,7 +95,7 @@ const Item = (props) => {
                     <div>
                         <Box className={classes.root1}
                             {...provided.dragHandleProps}
-                        >
+                        >                            
                             <Box style={{ display: 'flex', flexDirection: 'column' }}>
                                 <CardContent style={{ flex: '1 0 auto' }}>
                                     <Box style={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }}>
@@ -140,6 +141,9 @@ const Item = (props) => {
                                                 </Typography>
                                                 <Typography variant="body1" component="div">
                                                     Puntuació Peñín: {item.puntuacio_pe === '0' ? ('No') : (item.puntuacio_pe + ' punts')}
+                                                </Typography>
+                                                <Typography variant="body1" component="div">
+                                                    Zona: {!item.zona ? ('No') : zones?.find((zona) => zona.id === Number(item.zona)).titol_ca}
                                                 </Typography>
                                             </Fragment>
                                         )}

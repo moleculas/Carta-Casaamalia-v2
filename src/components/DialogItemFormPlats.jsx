@@ -263,7 +263,7 @@ const DialogItemFormPlats = (props) => {
                                 renderValue={(selected) => selected.join(', ')}
                             >
                                 <MenuItem value='No'>
-                                    <em>No</em>
+                                    No
                                 </MenuItem>
                                 {parades.map((parada, index) => (
                                     <MenuItem
@@ -292,7 +292,7 @@ const DialogItemFormPlats = (props) => {
                                 renderValue={(selected) => selected.join(', ')}
                             >
                                 <MenuItem value='No'>
-                                    <em>No</em>
+                                    No
                                 </MenuItem>
                                 {produccio.map((producte, index) => (
                                     <MenuItem
