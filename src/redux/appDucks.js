@@ -511,8 +511,10 @@ export const actualizarCategoria = (objeto, datos, carta) => async (dispatch, ge
             });
             if (objeto === "plats") {
                 dispatch({ type: SET_LADATACARTA, payload: res.data });
-            } else {
+            } else if (objeto === "vins") {
                 dispatch({ type: SET_LADATAVINS, payload: res.data });
+            } else {
+                dispatch({ type: SET_ZONES, payload: res.data });
             };
             dispatch(ultimaIntervencion());
             dispatch({ type: LOADING_APP, payload: false });
@@ -796,14 +798,22 @@ export const obtenerImatges = (dir) => async (dispatch, getState) => {
     };
 };
 
+const cambiarNombreArchivo = (file, nuevoNombre) => {
+    const blobModificado = new Blob([file], { type: file.type });
+    const archivoModificado = new File([blobModificado], nuevoNombre, { lastModified: file.lastModified, type: file.type });
+    return archivoModificado;
+};
+
 export const uploadImatge = (file, configDir) => async (dispatch, getState) => {
     dispatch({ type: LOADING_APP, payload: true });
     try {
+        const nomSanitize = file.name.replace(/\s+/g, "_");
+        const fileSanitize = cambiarNombreArchivo(file, nomSanitize);
         const ruta = determinaRutaServer(configDir);
         const esHeader = configDir.format === 'header' ? "si" : "no";
         const esEditable = configDir.format === 'produccio' || configDir.format === 'parades' || configDir.format === 'zones' ? "si" : "no";
         const formData = new FormData();
-        formData.append("file", file);
+        formData.append("file", fileSanitize);
         formData.append("ruta", ruta);
         formData.append("header", esHeader);
         formData.append("editable", esEditable);
@@ -841,7 +851,7 @@ export const eliminarImatge = (rutaImatge, configDir) => async (dispatch, getSta
         //la ruta ha de ser absoluta          
         const newDir = gestionaRutaServer(rutaImatge);
         const esHeader = configDir.format === 'header' ? "si" : "no";
-        const esEditable = configDir.format === 'produccio' || configDir.format === 'parades' ? "si" : "no";
+        const esEditable = configDir.format === 'produccio' || configDir.format === 'parades' || configDir.format === 'zones' ? "si" : "no";
         const newDirThumb = (esHeader === "no" && esEditable === "no")
             ? newDir.replace(/images\/(plats_imatges|vins_imatges)\//, "images/$1/thumbnails/")
             : "no";

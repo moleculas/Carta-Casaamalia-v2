@@ -113,6 +113,16 @@ const Medis = (props) => {
         const img = new Image();
         img.src = URL.createObjectURL(imatgeGest);
         img.onload = () => {
+            if (imatgeGest.name.includes(".webp")) {
+                dispatch(setAlertaAccion({
+                    abierto: true,
+                    mensaje: "Formar d'imatge no acceptat: webp.",
+                    tipo: 'error',
+                    posicio: 'dreta'
+                }));
+                resetImage();
+                return
+            };
             const { width, height } = img;
             const pesBrut = imatgeGest.size;
             if (pesBrut >= 10485760) {
@@ -145,10 +155,10 @@ const Medis = (props) => {
             //     resetImage();
             //     return
             // };
-            if (width < 1600 && configDir.format === "header") {
+            if (width < 1500 && configDir.format === "header") {
                 dispatch(setAlertaAccion({
                     abierto: true,
-                    mensaje: "Les imatges per les capçaleres han de ser majors de 1600px. No acceptat.",
+                    mensaje: "Les imatges per les capçaleres han de ser majors de 1500px. No acceptat.",
                     tipo: 'error',
                     posicio: 'dreta'
                 }));

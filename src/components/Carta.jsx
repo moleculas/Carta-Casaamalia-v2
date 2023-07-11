@@ -65,7 +65,7 @@ const Carta = (props) => {
         ultimaIntervencion,
         ordenarItemsExito,
         canviCartaExito,
-        intervencioRegistre,     
+        intervencioRegistre,
     } = useSelector(store => store.variablesApp);
     const openLoading = useSelector(store => store.variablesApp.loadingApp);
     const [itemsCat1, setItemsCat1] = useState(null);
@@ -75,7 +75,7 @@ const Carta = (props) => {
     const [itemsCat5, setItemsCat5] = useState(null);
     const [openSnack, setOpenSnack] = useState(false);
     const [alert, setAlert] = useState({});
-    const [valueTab, setValueTab] = useState(0);
+    const [valueTab, setValueTab] = useState(1);
     const esDesktop = useMediaQuery(theme => theme.breakpoints.up('lg'));
     const [isDataReady, setIsDataReady] = useState(false);
 
@@ -154,7 +154,7 @@ const Carta = (props) => {
         itemsCat3,
         itemsCat4,
         itemsCat5,
-        laDataCarta       
+        laDataCarta
     ]);
 
     useEffect(() => {
@@ -267,10 +267,10 @@ const Carta = (props) => {
     };
 
     return (
-        <div>           
+        <div>
             <Backdrop className={classes.loading} open={openLoading} style={{ zIndex: 9999 }}>
                 <CircularProgress color="inherit" />
-            </Backdrop>  
+            </Backdrop>
             <Grid container spacing={2}>
                 <Grid item xs={12}>
                     <Box
@@ -302,31 +302,34 @@ const Carta = (props) => {
                                     orientation={orientacioTabs(esDesktop)}
                                     indicatorColor="secondary"
                                     textColor="inherit"
+                                    style={{marginLeft: -90}}
                                 >
-                                    <Tab label={titolsCarta[0]['titol_ca']} {...a11yProps(0)} />
+                                    {/* desactivat primer item */}
+                                    <Tab disabled label="" {...a11yProps(0)} /> 
                                     <Tab label={titolsCarta[1][`titol_ca`]} {...a11yProps(1)} />
                                     <Tab label={titolsCarta[2][`titol_ca`]} {...a11yProps(2)} />
                                     <Tab label={titolsCarta[3][`titol_ca`]} {...a11yProps(3)} />
                                     <Tab label={titolsCarta[4][`titol_ca`]} {...a11yProps(4)} />
                                 </Tabs>
                             </AppBar>
-                            {titolsCarta.map((categoria, index) => {
+                            {titolsCarta.slice(1).map((categoria, index) => {
                                 const itemsArr = [itemsCat1, itemsCat2, itemsCat3, itemsCat4, itemsCat5];
+                                const tabIndex = index + 1; // Ajustamos el índice para que coincida con los valores de los paneles
                                 return (
                                     <TabPanel
-                                        key={`tabPanel-${index}`}
+                                        key={`tabPanel-${tabIndex}`}
                                         value={valueTab}
-                                        index={index}
+                                        index={tabIndex}
                                     >
                                         <Panel
                                             estemAPlats={true}
                                             estemAVins={false}
-                                            items={itemsArr[index]}
+                                            items={itemsArr[index + 1]}
                                             valueTab={valueTab}
                                         />
                                     </TabPanel>
-                                )
-                            })}
+                                );
+                            })}                          
                         </div>
                     </Box >
                 </Grid >

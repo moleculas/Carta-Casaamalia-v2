@@ -28,9 +28,11 @@ import {
     RestartAlt,
     Delete as DeleteIcon
 } from '@mui/icons-material';
+import { DragDropContext, Droppable } from "react-beautiful-dnd";
 
 //carga componentes
 import Lightbox from './Lightbox';
+import ItemZones from './ItemZones';
 
 //estilos
 import Clases from "../clases";
@@ -45,7 +47,8 @@ import {
     setCustomDialog,
     eliminarEditable,
     setOpenMedis,
-    setImatgeSeleccionada
+    setImatgeSeleccionada,
+    actualizarCategoria
 } from '../redux/appDucks';
 import { replaceSingleQuotes } from '../logica/logicaApp';
 
@@ -88,10 +91,26 @@ const DialogZones = (props) => {
     const [lightboxOpen, setLightboxOpen] = useState(false);
     const [botonDesactivadoRegistrar, setBotonDesactivadoRegistrar] = useState(true);
     const [item, setItem] = useState(null);
-    const arrItems = zones.filter((obj) => obj.categoria === categoria);
+    //const arrItems = zones.filter((obj) => obj.categoria === categoria);
     const rutaImatges = `${rutaServer}images/zones/`;
+    const [itemsOrdenablesZones, setItemsOrdenablesZones] = useState(null);
 
     //useEffect
+
+    useEffect(() => {
+        if (zones) {
+            const filteredItems = zones
+                .filter((obj) => obj.categoria === categoria)
+                .sort((a, b) => a.ordre - b.ordre)
+                .map((item, index) => ({
+                    ...item,
+                    id: `item-${index}`,
+                    realId: item.id,
+                    index: index + 1,
+                }))
+            setItemsOrdenablesZones(filteredItems);
+        }
+    }, [zones]);
 
     useEffect(() => {
         if (imatgeSeleccionada) {
@@ -170,7 +189,8 @@ const DialogZones = (props) => {
             imatge: valuesFormZones.imatge,
             categoria,
             modificat: new Date(),
-            usuari
+            usuari,
+            ordre: modeDialogZones === 'edicio' ? item.ordre : itemsOrdenablesZones.length + 1
         };
         modeDialogZones === 'creacio' ?
             dispatch(registrarZona(replaceSingleQuotes(objDatos))) :
@@ -197,7 +217,32 @@ const DialogZones = (props) => {
         }));
     };
 
-    if (!valuesFormZones) {
+    const onDragEnd = (result) => {
+        const { source, destination } = result;
+        if (!destination) {
+            return;
+        };
+        if (destination.index === source.index) {
+            return;
+        };
+        // const destino = (destination.index > (itemsActivosCat - 1)) ? (itemsActivosCat - 1) : destination.index;
+        const destino = destination.index;
+        const itemsNew = [...itemsOrdenablesZones];
+        const removed = itemsNew.splice(source.index, 1);
+        itemsNew.splice(destino, 0, ...removed);
+        const nuevoArr = itemsNew.map((item, index) => ({ ...item, id: `item-${index}` }));
+        setItemsOrdenablesZones(nuevoArr);
+        const arrActualizar = nuevoArr.map((item, index) => ({
+            ...item,
+            id: item.realId,
+            ordre: item.ordre > 0 ? index + 1 : 0
+        }));
+        setTimeout(() => {
+            dispatch(actualizarCategoria("zones", arrActualizar, "no"));
+        }, 200);
+    };
+
+    if (!valuesFormZones || !itemsOrdenablesZones) {
         return null
     };
 
@@ -354,11 +399,32 @@ const DialogZones = (props) => {
                                     </Typography>
                                 </Stack>
                             </AppBar>
-                            <Box style={{ maxHeight: '640px', overflowY: 'auto', overflowX: 'hidden', marginRight: 10, marginTop: 10 }}>
+                            <Box style={{ maxHeight: '640px', overflowY: 'hidden', overflowX: 'hidden', marginRight: 10, marginTop: 10 }}>
                                 <List
                                     style={{ paddingY: 5, paddingLeft: 5, paddingRight: 15 }}
                                 >
-                                    {arrItems.map((item, index) => (
+                                    <DragDropContext onDragEnd={onDragEnd}>
+                                        <Droppable droppableId="list" type="list" direction="vertical">
+                                            {(provided) => (
+                                                <div ref={provided.innerRef}>
+                                                    {itemsOrdenablesZones.map((item, index) => {
+                                                        return (
+                                                            <Box mb={0.5} key={index}>
+                                                                <ItemZones
+                                                                    item={item}
+                                                                    index={index}
+                                                                    handleClickItem={handleClickItem}
+                                                                    handleEliminar={handleEliminar}
+                                                                />
+                                                            </Box>
+                                                        )
+                                                    })}
+                                                    {provided.placeholder}
+                                                </div>
+                                            )}
+                                        </Droppable>
+                                    </DragDropContext>
+                                    {/* {arrItems.map((item, index) => (
                                         <ListItem
                                             key={`list-zones-${index}`}
                                             className={classes.casilla}
@@ -396,7 +462,7 @@ const DialogZones = (props) => {
                                                 </Tooltip>
                                             </ListItemSecondaryAction>
                                         </ListItem >
-                                    ))}
+                                    ))} */}
                                 </List>
                             </Box>
                         </Grid>
