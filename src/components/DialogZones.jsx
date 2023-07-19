@@ -180,7 +180,8 @@ const DialogZones = (props) => {
         };
         const objDatos = {
             ...(modeDialogZones === 'edicio' && ({
-                ...item
+                ...item,
+                id: item.realId
             })),
             titol_ca: valuesFormZones.titol_ca,
             titol_es: valuesFormZones.titol_es,

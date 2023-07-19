@@ -704,7 +704,7 @@ export const actualitzarEditable = (objeto, datos) => async (dispatch, getState)
 };
 
 export const actualitzarZona = (datos) => async (dispatch, getState) => {
-    dispatch({ type: LOADING_APP, payload: true });
+    dispatch({ type: LOADING_APP, payload: true });  
     try {
         const losDatos = JSON.stringify(datos);
         const formData = new FormData();

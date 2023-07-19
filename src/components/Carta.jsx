@@ -280,8 +280,11 @@ const Carta = (props) => {
                     >
                         <Typography variant="h5">{cartaGeneral?.nom_plats_ca}</Typography>
                         {cartaGeneral && (
+                            // <Chip
+                            //     label={`Actualitzat per última vegada el: ${ultimaIntervencion?.modificat ?? cartaGeneral.modificat} per ${((ultimaIntervencion ?? cartaGeneral).usuari).charAt(0).toUpperCase() + ((ultimaIntervencion ?? cartaGeneral).usuari).slice(1)}`}
+                            // />
                             <Chip
-                                label={`Actualitzat per última vegada el: ${ultimaIntervencion?.modificat ?? cartaGeneral.modificat} per ${((ultimaIntervencion ?? cartaGeneral).usuari).charAt(0).toUpperCase() + ((ultimaIntervencion ?? cartaGeneral).usuari).slice(1)}`}
+                                label={`Actualitzat per última vegada el: ${ultimaIntervencion?.modificat ?? cartaGeneral.modificat} per Admin`}
                             />
                         )}
                     </Box>
