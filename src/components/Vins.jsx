@@ -89,15 +89,16 @@ const Vins = (props) => {
             const itemsPorCategoria = categorias.reduce((obj, cat) => {
                 obj[`p${cat}`] = laDataVins.filter((vi) => vi.categoria === cat)
                     .sort((a, b) => {
-                        if (a.ordre === 0 && b.ordre === 0) {
-                            return 0;
-                        } else if (a.ordre === 0) {
-                            return 1;
-                        } else if (b.ordre === 0) {
-                            return -1;
-                        } else {
-                            return a.ordre - b.ordre;
-                        }
+                        return a.ordre - b.ordre;
+                        // if (a.ordre === 0 && b.ordre === 0) {
+                        //     return 0;
+                        // } else if (a.ordre === 0) {
+                        //     return 1;
+                        // } else if (b.ordre === 0) {
+                        //     return -1;
+                        // } else {
+                        //     return a.ordre - b.ordre;
+                        // }
                     });
                 return obj;
             }, {});
@@ -215,7 +216,8 @@ const Vins = (props) => {
     //funciones  
 
     const determinaItemsActivos = (array) => {
-        const itemsActivos = array.filter(item => item.ordre > 0).length;
+        //const itemsActivos = array.filter(item => item.ordre > 0).length;
+        const itemsActivos = array.length;
         dispatch(setItemsActivosCat(itemsActivos));
     };
 

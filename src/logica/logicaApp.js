@@ -2,8 +2,10 @@ import React, { useState, useEffect, useRef } from 'react';
 import {
     Box,
     Menu,
-    Typography
+    Typography,
+    Tooltip
 } from '@mui/material';
+import { Delete as DeleteIcon } from '@mui/icons-material';
 import { withStyles } from '@mui/styles';
 import MuiAlert from '@mui/material/Alert';
 
@@ -129,4 +131,22 @@ export const replaceSingleQuotes = (obj) => {
         };
     };
     return obj;
+};
+
+export const CustomDeleteIcon = ({ disabled, handleEliminar, id, ...otherProps }) => {
+    return disabled ? (
+        <DeleteIcon
+            sx={{ cursor: 'not-allowed', ml: 1, opacity: 0.3 }}
+            {...otherProps}
+        />
+    ) : (
+        <Tooltip title="Eliminar" placement="top-end" arrow>
+            <DeleteIcon
+                color="error"
+                onClick={(event) => handleEliminar(event, id)}
+                sx={{ cursor: 'pointer', ml: 1, opacity: 0.7 }}
+                {...otherProps}
+            />
+        </Tooltip>
+    );
 };

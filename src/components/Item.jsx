@@ -84,7 +84,7 @@ const Item = (props) => {
             draggableId={String(item.id)}
             index={index}
             type="list"
-            isDragDisabled={item.visibilitat === "0" ? true : false}
+            //isDragDisabled={item.visibilitat === "0" ? true : false}
         >           
             {(provided, snapshot) => (
                 <Card
@@ -204,7 +204,7 @@ const Item = (props) => {
                                             abierto: true,
                                             titulo: "Advertència",
                                             mensaje: "Estàs segur que vols eliminar el registre?",
-                                            funcionSi: () => dispatch(eliminarItem(estemAPlats ? "plats" : "vins", cartaGeneral.tipus, item.realId, estemAPlats ? item.nom_ca : ""))
+                                            funcionSi: () => dispatch(eliminarItem(estemAPlats ? "plats" : "vins", cartaGeneral.tipus, item.realId, estemAPlats ? item.nom_ca : "", item.categoria))
                                         }))}
                                     >
                                         Borrar

@@ -11,9 +11,6 @@ import {
     DialogTitle,
     useMediaQuery,
     List,
-    ListItem,
-    ListItemSecondaryAction,
-    ListItemText,
     FormControl,
     Input,
     InputLabel,
@@ -23,11 +20,7 @@ import {
     CardMedia,
     IconButton,
 } from '@mui/material';
-import {
-    BorderColor,
-    RestartAlt,
-    Delete as DeleteIcon
-} from '@mui/icons-material';
+import { RestartAlt } from '@mui/icons-material';
 import { DragDropContext, Droppable } from "react-beautiful-dnd";
 
 //carga componentes
@@ -58,7 +51,10 @@ const {
 } = Constantes;
 
 const DialogZones = (props) => {
-    const { categoria } = props;
+    const {
+        categoria,
+        items
+    } = props;
     const classes = Clases();
     const dispatch = useDispatch();
     const {
@@ -67,7 +63,6 @@ const DialogZones = (props) => {
         zones,
         imatgeSeleccionada
     } = useSelector(store => store.variablesApp);
-    const esDesktop = useMediaQuery(theme => theme.breakpoints.up('lg'));
     const usuari = useSelector(store => store.variablesUsuario.usuarioActivo.nombre);
     const [modeDialogZones, setModeDialogZones] = useState("creacio");
     const [initialStateValuesFormZones, setInitialStateValuesFormZones] = useState(
@@ -416,6 +411,7 @@ const DialogZones = (props) => {
                                                                     index={index}
                                                                     handleClickItem={handleClickItem}
                                                                     handleEliminar={handleEliminar}
+                                                                    items={items}
                                                                 />
                                                             </Box>
                                                         )
@@ -424,46 +420,7 @@ const DialogZones = (props) => {
                                                 </div>
                                             )}
                                         </Droppable>
-                                    </DragDropContext>
-                                    {/* {arrItems.map((item, index) => (
-                                        <ListItem
-                                            key={`list-zones-${index}`}
-                                            className={classes.casilla}
-                                        >
-                                            <ListItemText
-                                                secondary={
-                                                    <Typography
-                                                        component={"span"}
-                                                        style={{ fontSize: '14px' }}
-                                                    >
-                                                        {item.titol_ca}
-                                                    </Typography>
-                                                }
-                                                sx={{
-                                                    overflow: 'hidden',
-                                                    whiteSpace: 'nowrap',
-                                                    textOverflow: 'ellipsis',
-                                                    marginRight: 3
-                                                }}
-                                            />
-                                            <ListItemSecondaryAction>
-                                                <Tooltip title="Actualitzar" placement="top-end" arrow>
-                                                    <BorderColor
-                                                        color="disabled"
-                                                        onClick={() => handleClickItem(item)}
-                                                        sx={{ cursor: 'pointer' }}
-                                                    />
-                                                </Tooltip>
-                                                <Tooltip title="Eliminar" placement="top-end" arrow>
-                                                    <DeleteIcon
-                                                        color="error"
-                                                        onClick={(event) => handleEliminar(event, item.id)}
-                                                        sx={{ cursor: 'pointer', ml: 1, opacity: 0.7 }}
-                                                    />
-                                                </Tooltip>
-                                            </ListItemSecondaryAction>
-                                        </ListItem >
-                                    ))} */}
+                                    </DragDropContext>                               
                                 </List>
                             </Box>
                         </Grid>

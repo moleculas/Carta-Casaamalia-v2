@@ -37,7 +37,7 @@ import {
     setItemEditar,
     setAlertaAccion,
     registrarItem,
-    actualizarItemReordenar
+   // actualizarItemReordenar
 } from '../redux/appDucks';
 import {
     a11yProps,
@@ -237,12 +237,13 @@ const DialogItem = (props) => {
             dispatch(actualizarItem(objTabla, objDatos, objDestacat));
         } else {
             if (objDatos.categoria !== item.categoria) {
-                objDatos.ordre = 0;
+                //objDatos.ordre = 0;
                 objDatos.visibilitat = "0";
             } else {
-                objDatos.ordre = objDatos.visibilitat === "1" ? itemsActivosCat + 1 : 0;
+                //objDatos.ordre = objDatos.visibilitat === "1" ? itemsActivosCat + 1 : 0;
             };
-            dispatch(actualizarItemReordenar(objTabla, objDatos, objDestacat));
+            dispatch(actualizarItem(objTabla, objDatos, objDestacat));
+            //dispatch(actualizarItemReordenar(objTabla, objDatos, objDestacat));
         };
         handleCloseDialogItem();
     };
@@ -261,7 +262,8 @@ const DialogItem = (props) => {
             return;
         };
         objDatos.categoria = valueTab + 1;
-        objDatos.ordre = objDatos.visibilitat === "1" ? itemsActivosCat + 1 : 0;
+        //objDatos.ordre = objDatos.visibilitat === "1" ? itemsActivosCat + 1 : 0;
+        objDatos.ordre = itemsActivosCat + 1;
         objDatos.carta = cartaGeneral.tipus;
         const objDestacat = !estemAPlats || (objDatos.visibilitat === "1" && objDatos.destacat === "1") ? { estado: "si", ordre: itemsActivosDestacats + 1 } : { estado: "no", ordre: null };
         dispatch(registrarItem(objTabla, objDatos, objDestacat));

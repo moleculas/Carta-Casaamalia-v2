@@ -102,15 +102,16 @@ const Carta = (props) => {
             const itemsPorCategoria = categorias.reduce((obj, cat) => {
                 obj[`p${cat}`] = laDataCarta.filter((plat) => plat.categoria === cat)
                     .sort((a, b) => {
-                        if (a.ordre === 0 && b.ordre === 0) {
-                            return 0;
-                        } else if (a.ordre === 0) {
-                            return 1;
-                        } else if (b.ordre === 0) {
-                            return -1;
-                        } else {
-                            return a.ordre - b.ordre;
-                        }
+                        return a.ordre - b.ordre;
+                        // if (a.ordre === 0 && b.ordre === 0) {
+                        //     return 0;
+                        // } else if (a.ordre === 0) {
+                        //     return 1;
+                        // } else if (b.ordre === 0) {
+                        //     return -1;
+                        // } else {
+                        //     return a.ordre - b.ordre;
+                        // }
                     });
                 return obj;
             }, {});
@@ -234,12 +235,14 @@ const Carta = (props) => {
     //funciones  
 
     const determinaItemsActivos = (array) => {
-        const itemsActivos = array.filter(item => item.ordre > 0).length;
+        //const itemsActivos = array.filter(item => item.ordre > 0).length;
+        const itemsActivos = array.length;
         dispatch(setItemsActivosCat(itemsActivos));
     };
 
     const determinaItemsActivosDestacats = (array) => {
-        const itemsActivos = array.filter(item => item.ordre > 0).length;
+        //const itemsActivos = array.filter(item => item.ordre > 0).length;
+        const itemsActivos = array.length;
         dispatch(setItemsActivoDestacats(itemsActivos));
     };
 
@@ -280,11 +283,8 @@ const Carta = (props) => {
                     >
                         <Typography variant="h5">{cartaGeneral?.nom_plats_ca}</Typography>
                         {cartaGeneral && (
-                            // <Chip
-                            //     label={`Actualitzat per última vegada el: ${ultimaIntervencion?.modificat ?? cartaGeneral.modificat} per ${((ultimaIntervencion ?? cartaGeneral).usuari).charAt(0).toUpperCase() + ((ultimaIntervencion ?? cartaGeneral).usuari).slice(1)}`}
-                            // />
                             <Chip
-                                label={`Actualitzat per última vegada el: ${ultimaIntervencion?.modificat ?? cartaGeneral.modificat} per Admin`}
+                                label={`Actualitzat per última vegada el: ${ultimaIntervencion?.modificat ?? cartaGeneral.modificat} per ${((ultimaIntervencion ?? cartaGeneral).usuari).charAt(0).toUpperCase() + ((ultimaIntervencion ?? cartaGeneral).usuari).slice(1)}`}
                             />
                         )}
                     </Box>
@@ -305,10 +305,10 @@ const Carta = (props) => {
                                     orientation={orientacioTabs(esDesktop)}
                                     indicatorColor="secondary"
                                     textColor="inherit"
-                                    style={{marginLeft: -90}}
+                                    style={{ marginLeft: -90 }}
                                 >
                                     {/* desactivat primer item */}
-                                    <Tab disabled label="" {...a11yProps(0)} /> 
+                                    <Tab disabled label="" {...a11yProps(0)} />
                                     <Tab label={titolsCarta[1][`titol_ca`]} {...a11yProps(1)} />
                                     <Tab label={titolsCarta[2][`titol_ca`]} {...a11yProps(2)} />
                                     <Tab label={titolsCarta[3][`titol_ca`]} {...a11yProps(3)} />
@@ -329,10 +329,11 @@ const Carta = (props) => {
                                             estemAVins={false}
                                             items={itemsArr[index + 1]}
                                             valueTab={valueTab}
+                                            itemsTotal={[...itemsCat2, ...itemsCat3, ...itemsCat4, ...itemsCat5]}
                                         />
                                     </TabPanel>
                                 );
-                            })}                          
+                            })}
                         </div>
                     </Box >
                 </Grid >

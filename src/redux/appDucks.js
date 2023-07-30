@@ -560,7 +560,7 @@ export const registrarItem = (objeto, datos, objDestacat) => async (dispatch, ge
     }
 };
 
-export const eliminarItem = (objeto, carta, id, nom) => async (dispatch, getState) => {
+export const eliminarItem = (objeto, carta, id, nom, categoria) => async (dispatch, getState) => {
     dispatch({ type: LOADING_APP, payload: true });
     try {
         const formData = new FormData();
@@ -569,22 +569,35 @@ export const eliminarItem = (objeto, carta, id, nom) => async (dispatch, getStat
         formData.append("id", id);
         formData.append("nom", nom);
         let apiUrl = rutaApi + "eliminar.php";
-        const res = await axios.post(apiUrl, formData, {
+        const res1 = await axios.post(apiUrl, formData, {
             headers: {
                 "Content-Type": "multipart/form-data",
             }
         });
-        if (res.data) {
-            dispatch({
-                type: ELIMINAR_ITEM_EXITO
+        if (res1.data) {            
+            const arrayFiltrado = res1.data.filter(obj => obj.categoria === categoria);            
+            const arrReordenado = reordenarArrCat(arrayFiltrado);           
+            const losDatosOrdenados = JSON.stringify({ arrReordenado });
+            const formData2 = new FormData();
+            formData2.append("objeto", objeto);
+            formData2.append("datos", losDatosOrdenados);
+            formData2.append("carta", carta);
+            const apiUrl2 = rutaApi + "actualizar_categoria.php";
+            const res2 = await axios.post(apiUrl2, formData2, {
+                headers: { "Content-Type": "multipart/form-data" }
             });
-            if (objeto === "plats") {
-                dispatch({ type: SET_LADATACARTA, payload: res.data });
-            } else {
-                dispatch({ type: SET_LADATAVINS, payload: res.data });
+            if (res2.data) {
+                dispatch({
+                    type: ACTUALIZAR_ITEM_EXITO
+                });
+                if (objeto === "plats") {
+                    dispatch({ type: SET_LADATACARTA, payload: res2.data });
+                } else {
+                    dispatch({ type: SET_LADATAVINS, payload: res2.data });
+                };
+                dispatch(ultimaIntervencion());
+                dispatch({ type: LOADING_APP, payload: false });
             };
-            dispatch(ultimaIntervencion());
-            dispatch({ type: LOADING_APP, payload: false });
         };
     } catch (error) {
         dispatch({

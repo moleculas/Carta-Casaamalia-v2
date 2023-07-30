@@ -3,12 +3,12 @@ if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
     rutaApi = "http://localhost/api_casaamalia_v2/";
     rutaServer = "http://localhost/api_casaamalia_v2/";
 } else {
-    const preRutaServer = window.location.protocol + "//" + window.location.host + "/test/gestio";
+    const preRutaServer = window.location.protocol + "//" + window.location.host + "/gestio";
     rutaApi = preRutaServer + "/api/";
     rutaServer = preRutaServer + "/api/";
 };
 
-const subdirectoriProduccio = '/test/gestio';
+const subdirectoriProduccio = '/gestio';
 //afegir a package.json: "homepage": "https://carta.casaamalia.com/gestio",
 
 const Constantes = {

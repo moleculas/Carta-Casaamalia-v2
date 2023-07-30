@@ -56,11 +56,15 @@ import {
     a11yProps,
     orientacioTabs,
     TabPanel,
-    replaceSingleQuotes
+    replaceSingleQuotes,
+    CustomDeleteIcon
 } from '../logica/logicaApp';
 
 const DialogEditable = (props) => {
-    const { element } = props;
+    const {
+        element,
+        itemsTotal
+    } = props;
     const classes = Clases();
     const dispatch = useDispatch();
     const {
@@ -287,6 +291,27 @@ const DialogEditable = (props) => {
             mensaje: "Estàs segur que vols eliminar el registre?",
             funcionSi: () => funcionsSi(id)
         }));
+    };
+
+    const habilitatEliminar = (id) => {
+        if (element === "parades") {
+            for (const objeto of itemsTotal) {
+                const parades = (objeto.parada || "").split(",").map(parada => Number(parada));
+                if (parades.includes(id)) {
+                    return true;
+                };
+            };
+            return false;
+        };
+        if (element === "produccio") {
+            for (const objeto of itemsTotal) {
+                const produccions = (objeto.produccio || "").split(",").map(produccio => Number(produccio));
+                if (produccions.includes(id)) {
+                    return true;
+                };
+            };
+            return false;
+        };
     };
 
     if (!valuesFormEditable) {
@@ -553,7 +578,7 @@ const DialogEditable = (props) => {
                                         color="text.secondary"
                                         className={classes.fuentePequena}
                                     >
-                                        Llistat producció
+                                        {element === "produccio" ? "Llistat producció" : "Llistat parades"}
                                     </Typography>
 
                                 </Stack>
@@ -571,7 +596,7 @@ const DialogEditable = (props) => {
                                                 secondary={
                                                     <Typography
                                                         component={"span"}
-                                                        style={{fontSize: '14px'}}
+                                                        style={{ fontSize: '14px' }}
                                                     >
                                                         {item.nom_ca}
                                                     </Typography>
@@ -591,13 +616,18 @@ const DialogEditable = (props) => {
                                                         sx={{ cursor: 'pointer' }}
                                                     />
                                                 </Tooltip>
-                                                <Tooltip title="Eliminar" placement="top-end" arrow>
+                                                <CustomDeleteIcon
+                                                    disabled={habilitatEliminar(item.id)}
+                                                    handleEliminar={handleEliminar}
+                                                    id={item.id}
+                                                />
+                                                {/* <Tooltip title="Eliminar" placement="top-end" arrow>
                                                     <DeleteIcon
                                                         color="error"
                                                         onClick={(event) => handleEliminar(event, item.id)}
                                                         sx={{ cursor: 'pointer', ml: 1, opacity: 0.7 }}
                                                     />
-                                                </Tooltip>
+                                                </Tooltip> */}
                                             </ListItemSecondaryAction>
                                         </ListItem >
                                     ))}

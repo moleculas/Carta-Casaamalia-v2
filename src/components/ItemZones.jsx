@@ -5,12 +5,11 @@ import {
     Tooltip,
     Typography
 } from '@mui/material';
-import {
-    BorderColor,
-    Delete as DeleteIcon
-} from '@mui/icons-material';
-
+import { BorderColor } from '@mui/icons-material';
 import { Draggable } from "react-beautiful-dnd";
+
+//importacion acciones
+import { CustomDeleteIcon } from '../logica/logicaApp';
 
 //estilos
 import Clases from "../clases";
@@ -20,37 +19,16 @@ const ItemZones = (props) => {
         item,
         index,
         handleClickItem,
-        handleEliminar
+        handleEliminar,
+        items
     } = props;
     const classes = Clases();
 
-    //funciones
-
-    // const handleClickItem = (item) => {
-    //     setModeDialogZones('edicio');
-    //     setItem(item);
-    //     const obj = {
-    //         titol_ca: item.titol_ca,
-    //         titol_es: item.titol_es,
-    //         titol_en: item.titol_en,
-    //         titol_fr: item.titol_fr,
-    //         imatge: item.imatge
-    //     };
-    //     setValuesFormZones(obj);
-    //     setInitialStateValuesFormZones(obj);
-    // };
-
-    // const handleEliminar = (event, id) => {
-    //     const funcionsSi = (id) => {
-    //         dispatch(eliminarEditable("zones", id));
-    //     };
-    //     dispatch(setCustomDialog({
-    //         abierto: true,
-    //         titulo: "Advertència",
-    //         mensaje: "Estàs segur que vols eliminar el registre?",
-    //         funcionSi: () => funcionsSi(id)
-    //     }));
-    // };
+    //funciones   
+    
+    const habilitatEliminar = () => {
+        return items.some(obj => obj.zona === item.realId);
+    };
 
     return (
         <Draggable
@@ -93,13 +71,11 @@ const ItemZones = (props) => {
                                     sx={{ cursor: 'pointer' }}
                                 />
                             </Tooltip>
-                            <Tooltip title="Eliminar" placement="top-end" arrow>
-                                <DeleteIcon
-                                    color="error"
-                                    onClick={(event) => handleEliminar(event, item.realId)}
-                                    sx={{ cursor: 'pointer', ml: 1, opacity: 0.7 }}
-                                />
-                            </Tooltip>
+                            <CustomDeleteIcon
+                                disabled={habilitatEliminar()}
+                                handleEliminar={handleEliminar}
+                                id={item.realId}
+                            />
                         </ListItemSecondaryAction>
                     </ListItem >
                 </div>

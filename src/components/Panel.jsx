@@ -36,7 +36,8 @@ const Panel = (props) => {
         estemAPlats,
         estemAVins,
         items,
-        valueTab
+        valueTab,
+        itemsTotal
     } = props;
     const classes = Clases();
     const dispatch = useDispatch();
@@ -94,7 +95,8 @@ const Panel = (props) => {
         const arrActualizar = nuevoArr.map((item, index) => ({
             ...item,
             id: item.realId,
-            ordre: item.ordre > 0 ? index + 1 : 0
+            //ordre: item.ordre > 0 ? index + 1 : 0
+            ordre: index + 1
         }));
         setTimeout(() => {
             dispatch(actualizarCategoria(estemAPlats ? "plats" : "vins", arrActualizar, cartaGeneral.tipus));
@@ -240,13 +242,22 @@ const Panel = (props) => {
                 />
             )}
             {openDialog === "produccio" && (
-                <DialogEditable element={"produccio"} />
+                <DialogEditable
+                    element={"produccio"}
+                    itemsTotal={itemsTotal}
+                />
             )}
             {openDialog === "parades" && (
-                <DialogEditable element={"parades"} />
+                <DialogEditable
+                    element={"parades"}
+                    itemsTotal={itemsTotal}
+                />
             )}
             {openDialog === "zones" && (
-                <DialogZones categoria={titolsVins?.[valueTab][`titol_ca`]} />
+                <DialogZones
+                    categoria={titolsVins?.[valueTab][`titol_ca`]}
+                    items={items}
+                />
             )}
         </div>
     )

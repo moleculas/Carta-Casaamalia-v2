@@ -155,10 +155,10 @@ const Medis = (props) => {
             //     resetImage();
             //     return
             // };
-            if (width < 1500 && configDir.format === "header") {
+            if (width < 1199 && configDir.format === "header") {
                 dispatch(setAlertaAccion({
                     abierto: true,
-                    mensaje: "Les imatges per les capçaleres han de ser majors de 1500px. No acceptat.",
+                    mensaje: "Les imatges per les capçaleres han de ser majors de 1200px. No acceptat.",
                     tipo: 'error',
                     posicio: 'dreta'
                 }));

@@ -27,6 +27,8 @@ if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
     rutaServer = preRutaServer + "/api/";
 };
 
+-canviar const subdirectoriProduccio = '/test/gestio'; a const subdirectoriProduccio = '/gestio'; a constantes.js
+
 -En lloc de canviar package.json "homepage", es configura la variable PUBLIC_URL a 
 .env.development.local
 .env.production.local
