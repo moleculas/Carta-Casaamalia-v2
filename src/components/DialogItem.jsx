@@ -170,6 +170,7 @@ const DialogItem = (props) => {
             setValuesFormItem({
                 ...valuesFormItem,
                 visibilitat: propToUpdate === "visibilitat" ? newValue : valuesFormItem.visibilitat,
+                destacat: newValue
                 //destacat: propToUpdate === "visibilitat" ? "0" : newValue
             });
         } else {
