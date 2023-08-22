@@ -37,7 +37,7 @@ import {
     setItemEditar,
     setAlertaAccion,
     registrarItem,
-   // actualizarItemReordenar
+    // actualizarItemReordenar
 } from '../redux/appDucks';
 import {
     a11yProps,
@@ -166,19 +166,10 @@ const DialogItem = (props) => {
     const handleClickBotonsSup = (prop) => {
         const propToUpdate = prop === "visibilitat" ? "visibilitat" : "destacat";
         const newValue = valuesFormItem[propToUpdate] === "1" ? "0" : "1";
-        if (estemAPlats || propToUpdate === "visibilitat") {
-            setValuesFormItem({
-                ...valuesFormItem,
-                visibilitat: propToUpdate === "visibilitat" ? newValue : valuesFormItem.visibilitat,
-                destacat: newValue
-                //destacat: propToUpdate === "visibilitat" ? "0" : newValue
-            });
-        } else {
-            setValuesFormItem({
-                ...valuesFormItem,
-                [propToUpdate]: newValue
-            });
-        }
+        setValuesFormItem({
+            ...valuesFormItem,
+            [propToUpdate]: newValue
+        });
     };
 
     const processarDadesItem = (e) => {
