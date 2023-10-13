@@ -108,21 +108,43 @@ const Medis = (props) => {
         return new File([file], newFileName, { type: file.type });
     };
 
-    const handleChangeImage = (e) => {
-        const imatgeGest = renameImageFile(e.target.files[0]);
-        const img = new Image();
-        img.src = URL.createObjectURL(imatgeGest);
-        img.onload = () => {
-            if (imatgeGest.name.includes(".webp")) {
+    const readFileAsync = (e) => {
+        return new Promise((resolve, reject) => {
+            const file = e.target.files[0];
+            if (file.type !== 'image/jpeg' && file.type !== 'image/png') {
                 dispatch(setAlertaAccion({
                     abierto: true,
-                    mensaje: "Formar d'imatge no acceptat: webp.",
+                    mensaje: `Formar d'imatge no acceptat: ${file.type}`,
                     tipo: 'error',
                     posicio: 'dreta'
                 }));
                 resetImage();
                 return
             };
+            const reader = new FileReader();
+            reader.onload = () => {
+                resolve(file);
+            };
+            reader.onerror = reject;
+            reader.readAsDataURL(file);
+        });
+    };
+
+    const handleChangeImage = (file) => {
+        const imatgeGest = renameImageFile(file);
+        const img = new Image();
+        img.src = URL.createObjectURL(imatgeGest);
+        img.onerror = () => {
+            dispatch(setAlertaAccion({
+                abierto: true,
+                mensaje: "Error en pujar la imatge.",
+                tipo: 'error',
+                posicio: 'dreta'
+            }));
+            resetImage();
+            return
+        };
+        img.onload = () => {
             const { width, height } = img;
             const pesBrut = imatgeGest.size;
             if (pesBrut >= 10485760) {
@@ -247,7 +269,11 @@ const Medis = (props) => {
                                         id="uploadCaptureInputFile"
                                         multiple type="file"
                                         style={{ display: 'none' }}
-                                        onChange={handleChangeImage}
+                                        //onChange={handleChangeImage}
+                                        onChange={async (e) => {
+                                            const file = await readFileAsync(e);
+                                            handleChangeImage(file);
+                                        }}
                                     />
                                     <label htmlFor="uploadCaptureInputFile">
                                         <Button
