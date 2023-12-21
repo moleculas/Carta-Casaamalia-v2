@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef  } from 'react';
 
-function useInactivityTimer( tancarSessio, logged) {
+function useInactivityTimer( tancarSessio, logged, usuari) {
     const Ref = useRef(null);
     const [timer, setTimer] = useState('01:00');
     const [tiempoAlarma, setTiempoAlarma] = useState(false);
@@ -59,8 +59,8 @@ function useInactivityTimer( tancarSessio, logged) {
         clearTimer(getDeadTime());
     };
 
-    const updateExpireTime = () => {
-        const expireTime = Date.now() + 120000;
+    const updateExpireTime = () => {       
+        const expireTime = usuari === "admin" || usuari === "sergi_nadal" ? Date.now() + 1200000 : Date.now() + 120000;
         localStorage.setItem("expireTime", expireTime);
         setTiempoAlarma(false);
         clearTimer(null);

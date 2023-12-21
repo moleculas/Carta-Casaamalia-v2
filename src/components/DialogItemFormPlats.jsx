@@ -48,10 +48,10 @@ const DialogItemFormPlats = (props) => {
 
     //funciones
 
-    const handleChangeFormItem = (prop) => (event) => {
+    const handleChangeFormItem = (prop) => (event) => {       
         setValuesFormItem({
             ...valuesFormItem,
-            [prop]: event.target.value
+            [prop]: event.target.value,
         });
     };
 
@@ -111,7 +111,7 @@ const DialogItemFormPlats = (props) => {
     };
 
     return (
-        <Fragment >
+        <Fragment>         
             <TabPanel value={valueTab2} index={0}>
                 <FormControl
                     className={classes.form}
@@ -345,11 +345,11 @@ const DialogItemFormPlats = (props) => {
                                 onChange={handleChangeFormItem('categoria')}
                             >
                                 {titolsCarta.map(categoria => {
-                                    if (categoria.id !== 1) {
+                                    if ((cartaGeneral.tipus === "nadal" && categoria.id !== 10) || (cartaGeneral.tipus === "normal" && categoria.id !== 1)) {
                                         return (
                                             <MenuItem
                                                 key={`categoria-${categoria.id}`}
-                                                value={categoria.id}
+                                                value={cartaGeneral.tipus === "nadal" ? categoria.id - 9 : categoria.id} //parche categoria
                                             >
                                                 {categoria.titol_ca}
                                             </MenuItem>

@@ -45,7 +45,7 @@ const Login = (props) => {
 
     useEffect(() => {
         if (logged) {
-            navigate('/')
+            navigate('/');           
         };
     }, [logged]);
 

@@ -69,6 +69,9 @@ export const logoutUsuarioAccion = () => (dispatch, getState) => {
         type: LOGOUT
     });
     localStorage.removeItem('usuario');
+    return new Promise((resolve, reject) => {
+        resolve({ payload: true });
+    });
 };
 
 export const leerUsuarioAccion = () => async (dispatch) => {

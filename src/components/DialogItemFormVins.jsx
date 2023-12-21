@@ -58,7 +58,7 @@ const DialogItemFormVins = (props) => {
     };
 
     return (
-        <Fragment>            
+        <Fragment>                    
             <TabPanel value={valueTab2} index={0}>
                 <FormControl
                     className={classes.form}
@@ -322,8 +322,8 @@ const DialogItemFormVins = (props) => {
                             >
                                 {titolsVins.map(categoria => (
                                     <MenuItem
-                                        key={`categoria-${categoria.id - 5}`}
-                                        value={categoria.id - 5}
+                                        key={`categoria-${categoria.id - 5}`}                                      
+                                        value={cartaGeneral.tipus === "nadal" ? categoria.id - 14 : categoria.id -5} //parche categoria
                                     >
                                         {categoria.titol_ca}
                                     </MenuItem>

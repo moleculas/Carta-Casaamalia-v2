@@ -16,7 +16,8 @@ import {
     Paper,
     Popper,
     MenuItem,
-    MenuList
+    MenuList,
+    Stack
 } from "@mui/material";
 import {
     Menu as MenuIcon,
@@ -30,6 +31,7 @@ import logo from '../images/logo_header.png';
 import {
     setCustomDialog,
     canviCarta,
+    canviCartaEdicio,
     resetApp
 } from '../redux/appDucks';
 
@@ -48,21 +50,43 @@ const Navbar = (props) => {
     const usuari = useSelector(store => store.variablesUsuario.usuarioActivo.nombre);
     const options = tipusCarta;
     const [openMenuCarta, setOpenMenuCarta] = useState(false);
+    const [openMenuCartaActiva, setOpenMenuCartaActiva] = useState(false);
     const anchorRef = useRef(null);
-    const [selectedIndex, setSelectedIndex] = useState(null);
+    const anchorRefActiva = useRef(null);
+    const [selectedIndexEdicio, setSelectedIndexEdicio] = useState(null);
+    const [selectedIndexActiva, setSelectedIndexActiva] = useState(null);
 
     useEffect(() => {
         if (cartaGeneral) {
-            setSelectedIndex(options.indexOf(cartaGeneral.tipus));
-        };
+            const edicioIndex = cartaGeneral.activa_edicio === "si" ? 1 : 0;
+            const activaIndex = cartaGeneral.activa === "si" ? 1 : 0;
+            if (cartaGeneral.tipus === "normal") {
+                setSelectedIndexEdicio(edicioIndex);
+                setSelectedIndexActiva(activaIndex);
+            } else if (cartaGeneral.tipus === "nadal") {
+                setSelectedIndexEdicio(1 - edicioIndex);
+                setSelectedIndexActiva(1 - activaIndex);
+            }
+        }
     }, [cartaGeneral]);
 
     //funciones
 
-    const handleMenuItemClick = (event, index) => {
+    const handleMenuItemClickEdicio = (event, index) => {
+        setSelectedIndexEdicio(index);
+        setOpenMenuCarta(false);
+        dispatch(canviCartaEdicio(options[index])).then(({ payload }) => {
+            if (payload) {
+                dispatch(resetApp());
+                navigate('/');
+            };
+        });
+    };
+
+    const handleMenuItemClickDefinitiu = (event, index) => {
         const funcionsSi = () => {
-            setSelectedIndex(index);
-            setOpenMenuCarta(false);
+            setSelectedIndexActiva(index);
+            setOpenMenuCartaActiva(false);
             dispatch(canviCarta(options[index])).then(({ payload }) => {
                 if (payload) {
                     dispatch(resetApp());
@@ -89,6 +113,43 @@ const Navbar = (props) => {
         setOpenMenuCarta(false);
     };
 
+    const handleToggleMenuCartaActiva = () => {
+        setOpenMenuCartaActiva((prevOpen) => !prevOpen);
+    };
+
+    const handleCloseMenuCartaActiva = (event) => {
+        if (anchorRefActiva.current && anchorRefActiva.current.contains(event.target)) {
+            return;
+        };
+        setOpenMenuCartaActiva(false);
+    };
+
+    const retornaActiuColor = (boto) => {
+        if (!cartaGeneral) return;
+        const isNormal = cartaGeneral.tipus === "normal";
+        const isSi = (prop) => cartaGeneral[prop] === "si";
+        if (isNormal) {
+            return boto === "edicio" ? (isSi("activa_edicio") ? "primary" : "custom") :
+                (isSi("activa") ? "primary" : "custom");
+        } else if (cartaGeneral.tipus === "nadal") {
+            return boto === "edicio" ? (isSi("activa_edicio") ? "custom" : "primary") :
+                (isSi("activa") ? "custom" : "primary");
+        }
+    };
+
+    const retornaActiuDisabled = (boto, option) => {
+        if (!cartaGeneral) return;
+        const isNormal = cartaGeneral.tipus === "normal";
+        const isSi = (prop) => cartaGeneral[prop] === "si";
+        if (isNormal) {
+            return boto === "edicio" ? (isSi("activa_edicio") ? option === "normal" : option === "nadal") :
+                (isSi("activa") ? option === "normal" : option === "nadal");
+        } else if (cartaGeneral.tipus === "nadal") {
+            return boto === "edicio" ? (isSi("activa_edicio") ? option === "nadal" : option === "normal") :
+                (isSi("activa") ? option === "nadal" : option === "normal");
+        }
+    };
+
     return (
         <AppBar className={classes.appBar} color={cartaGeneral?.tipus === "nadal" ? "custom" : "primary"}>
             <Toolbar>
@@ -107,62 +168,119 @@ const Navbar = (props) => {
                         {cartaGeneral?.tipus === "nadal" ? "Backend Gestió Carta Nadal Casa Amàlia" : "Backend Gestió Carta Casa Amàlia"}
                     </Typography>
                 </Hidden>
-                {(logged && cartaGeneral) && (
-                    <Box sx={{ marginRight: 0 }}>
-                        <ButtonGroup
-                            variant="contained"
-                            ref={anchorRef}
-                            color={cartaGeneral?.tipus === "nadal" ? "custom" : "primary"}
-                            disableElevation
-                            className={classes.ombra}
-                            disabled={usuari !== "admin" && usuari !== "sergi"}
-                        >
-                            <Button sx={{ pointerEvents: "none" }}>{options[selectedIndex]}</Button>
-                            <Button
-                                size="small"
-                                onClick={handleToggleMenuCarta}
+                {(logged && cartaGeneral && (usuari === "admin" || usuari === "sergi_nadal")) && (
+                    <Stack direction="row" spacing={1}>
+                        <Box sx={{ marginRight: 0 }}>
+                            <ButtonGroup
+                                variant="contained"
+                                ref={anchorRef}
+                                color={retornaActiuColor("edicio")}
+                                disableElevation
+                                className={classes.ombra}
                             >
-                                <ArrowDropDownIcon />
-                            </Button>
-                        </ButtonGroup>
-                        <Popper
-                            sx={{
-                                zIndex: 1,
-                            }}
-                            open={openMenuCarta}
-                            anchorEl={anchorRef.current}
-                            role={undefined}
-                            transition
-                            disablePortal
-                        >
-                            {({ TransitionProps, placement }) => (
-                                <Grow
-                                    {...TransitionProps}
-                                    style={{
-                                        transformOrigin:
-                                            placement === 'bottom' ? 'center top' : 'center bottom',
-                                    }}
+                                <Button sx={{ pointerEvents: "none" }}>{`Edició ${options[selectedIndexEdicio]}`}</Button>
+                                <Button
+                                    size="small"
+                                    onClick={handleToggleMenuCarta}
                                 >
-                                    <Paper>
-                                        <ClickAwayListener onClickAway={handleCloseMenuCarta}>
-                                            <MenuList id="split-button-menu" autoFocusItem>
-                                                {options.map((option, index) => (
-                                                    <MenuItem
-                                                        key={option}
-                                                        selected={index === selectedIndex}
-                                                        onClick={(event) => handleMenuItemClick(event, index)}
-                                                        disabled={option === cartaGeneral.tipus ? true : false}
-                                                    >
-                                                        {option.charAt(0).toUpperCase() + option.slice(1)}
-                                                    </MenuItem>
-                                                ))}
-                                            </MenuList>
-                                        </ClickAwayListener>
-                                    </Paper>
-                                </Grow>
-                            )}
-                        </Popper>
-                    </Box>
+                                    <ArrowDropDownIcon />
+                                </Button>
+                            </ButtonGroup>
+                            <Popper
+                                sx={{
+                                    zIndex: 1,
+                                }}
+                                open={openMenuCarta}
+                                anchorEl={anchorRef.current}
+                                role={undefined}
+                                transition
+                                disablePortal
+                            >
+                                {({ TransitionProps, placement }) => (
+                                    <Grow
+                                        {...TransitionProps}
+                                        style={{
+                                            transformOrigin:
+                                                placement === 'bottom' ? 'center top' : 'center bottom',
+                                        }}
+                                    >
+                                        <Paper>
+                                            <ClickAwayListener onClickAway={handleCloseMenuCarta}>
+                                                <MenuList id="split-button-menu" autoFocusItem>
+                                                    {options.map((option, index) => (
+                                                        <MenuItem
+                                                            key={option}
+                                                            selected={index === selectedIndexEdicio}
+                                                            onClick={(event) => handleMenuItemClickEdicio(event, index)}
+                                                            //disabled={option === cartaGeneral.tipus ? true : false}
+                                                            disabled={retornaActiuDisabled("edicio", option)}
+                                                        >
+                                                            {`Edició ${option.charAt(0).toUpperCase() + option.slice(1)}`}
+                                                        </MenuItem>
+                                                    ))}
+                                                </MenuList>
+                                            </ClickAwayListener>
+                                        </Paper>
+                                    </Grow>
+                                )}
+                            </Popper>
+                        </Box>
+                        <Box sx={{ marginRight: 0 }}>
+                            <ButtonGroup
+                                variant="contained"
+                                ref={anchorRefActiva}
+                                color={retornaActiuColor("activa")}
+                                disableElevation
+                                className={classes.ombra}
+                            >
+                                <Button sx={{ pointerEvents: "none" }}>{`Activa ${options[selectedIndexActiva]}`}</Button>
+                                <Button
+                                    size="small"
+                                    onClick={handleToggleMenuCartaActiva}
+                                >
+                                    <ArrowDropDownIcon />
+                                </Button>
+                            </ButtonGroup>
+                            <Popper
+                                sx={{
+                                    zIndex: 1,
+                                }}
+                                open={openMenuCartaActiva}
+                                anchorEl={anchorRefActiva.current}
+                                role={undefined}
+                                transition
+                                disablePortal
+                            >
+                                {({ TransitionProps, placement }) => (
+                                    <Grow
+                                        {...TransitionProps}
+                                        style={{
+                                            transformOrigin:
+                                                placement === 'bottom' ? 'center top' : 'center bottom',
+                                        }}
+                                    >
+                                        <Paper>
+                                            <ClickAwayListener onClickAway={handleCloseMenuCartaActiva}>
+                                                <MenuList id="split-button-menu" autoFocusItem>
+                                                    {options.map((option, index) => (
+                                                        <MenuItem
+                                                            key={option}
+                                                            selected={index === selectedIndexActiva}
+                                                            onClick={(event) => handleMenuItemClickDefinitiu(event, index)}
+                                                            //disabled={option === cartaGeneral.tipus ? true : false}
+                                                            disabled={retornaActiuDisabled("activa", option)}
+                                                        >
+                                                            {`Activa ${option.charAt(0).toUpperCase() + option.slice(1)}`}
+                                                        </MenuItem>
+                                                    ))}
+                                                </MenuList>
+                                            </ClickAwayListener>
+                                        </Paper>
+                                    </Grow>
+                                )}
+                            </Popper>
+                        </Box>
+                    </Stack>
                 )}
             </Toolbar>
         </AppBar>

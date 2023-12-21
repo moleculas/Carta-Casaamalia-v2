@@ -29,16 +29,21 @@ const Menu = (props) => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const logged = useSelector(store => store.variablesUsuario.activo);
+    const usuari = useSelector(store => store.variablesUsuario.usuarioActivo.nombre);
 
     //funciones
 
     const tancarSessio = () => {
-        dispatch(resetApp());
-        dispatch(logoutUsuarioAccion());
-        localStorage.clear();
-        navigate('/login');
+        dispatch(logoutUsuarioAccion()).then(({ payload }) => {
+            if (payload) {              
+                dispatch(resetApp());
+                localStorage.clear();
+                navigate('/login');
+            }
+        })
     };
-    const [tiempoAlarma, timer] = useInactivityTimer(tancarSessio, logged);
+    
+    const [tiempoAlarma, timer] = useInactivityTimer(tancarSessio, logged, usuari);
 
     return (
         <div>

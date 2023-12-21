@@ -214,6 +214,9 @@ const determinaRutaServer = (configDir) => {
 
 export const obtenerDatosInicial = (tipo) => async (dispatch, getState) => {
     const { cartaGeneral } = getState().variablesApp;
+    const usuari = getState().variablesUsuario.usuarioActivo.nombre;
+    //evitar error logout timer al fer reset dades
+    if (!usuari) return;
     dispatch({ type: LOADING_APP, payload: true });
     try {
         const formData1 = new FormData();
@@ -265,7 +268,10 @@ export const obtenerDatosInicial = (tipo) => async (dispatch, getState) => {
         dispatch({ type: ERROR_DE_CARGA });
     };
     async function obtenerCartaInicial(formData) {
-        const res = await axios.post(rutaApi + "obtener_carta_inicial.php", formData, {
+        const endpoint = usuari === "admin" || usuari === "sergi_nadal"
+            ? "obtener_carta_inicial_admin.php"
+            : "obtener_carta_inicial.php";
+        const res = await axios.post(`${rutaApi}${endpoint}`, formData, {
             headers: { "Content-Type": "multipart/form-data" },
         });
         dispatch({
@@ -311,6 +317,30 @@ export const canviCarta = (carta) => async (dispatch, getState) => {
         const formData = new FormData();
         formData.append("carta", carta);
         let apiUrl = rutaApi + "canvi_carta.php";
+        const res = await axios.post(apiUrl, formData, {
+            headers: {
+                "Content-Type": "multipart/form-data",
+            }
+        });
+        if (res.data) {
+            dispatch({
+                type: CANVI_CARTA_EXITO
+            });
+            dispatch(ultimaIntervencion());
+            return { payload: true }
+        };
+    } catch (error) {
+        dispatch({
+            type: ERROR_DE_CARGA
+        })
+    }
+};
+
+export const canviCartaEdicio = (carta) => async (dispatch, getState) => {
+    try {
+        const formData = new FormData();
+        formData.append("carta", carta);
+        let apiUrl = rutaApi + "canvi_carta_edicio.php";
         const res = await axios.post(apiUrl, formData, {
             headers: {
                 "Content-Type": "multipart/form-data",
@@ -574,9 +604,9 @@ export const eliminarItem = (objeto, carta, id, nom, categoria) => async (dispat
                 "Content-Type": "multipart/form-data",
             }
         });
-        if (res1.data) {            
-            const arrayFiltrado = res1.data.filter(obj => obj.categoria === categoria);            
-            const arrReordenado = reordenarArrCat(arrayFiltrado);           
+        if (res1.data) {
+            const arrayFiltrado = res1.data.filter(obj => obj.categoria === categoria);
+            const arrReordenado = reordenarArrCat(arrayFiltrado);
             const losDatosOrdenados = JSON.stringify({ arrReordenado });
             const formData2 = new FormData();
             formData2.append("objeto", objeto);
@@ -717,7 +747,7 @@ export const actualitzarEditable = (objeto, datos) => async (dispatch, getState)
 };
 
 export const actualitzarZona = (datos) => async (dispatch, getState) => {
-    dispatch({ type: LOADING_APP, payload: true });  
+    dispatch({ type: LOADING_APP, payload: true });
     try {
         const losDatos = JSON.stringify(datos);
         const formData = new FormData();

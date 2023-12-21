@@ -34,6 +34,15 @@ if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
 .env.production.local
 i es posa  <base href="%PUBLIC_URL%/"> al head d'index.html
 
+recordar: 
+ let baseName;
+    if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
+        baseName = '';
+    } else {
+        baseName = subProduccio;
+    };
+    a Router per que funcioni en un subdirectori
+
 -Canviar .htaccess 
 de
 RewriteRule ^ test/gestio/index.html [L]
