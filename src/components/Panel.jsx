@@ -35,6 +35,7 @@ const Panel = (props) => {
     const {
         estemAPlats,
         estemAVins,
+        estemACocktails,
         items,
         valueTab,
         itemsTotal
@@ -45,6 +46,7 @@ const Panel = (props) => {
         openDialog,
         titolsCarta,
         titolsVins,
+        titolsCocktails,
         openMedis,
         cartaGeneral,
         itemsActivosCat,
@@ -99,7 +101,7 @@ const Panel = (props) => {
             ordre: index + 1
         }));
         setTimeout(() => {
-            dispatch(actualizarCategoria(estemAPlats ? "plats" : "vins", arrActualizar, cartaGeneral.tipus));
+            dispatch(actualizarCategoria(estemAPlats ? "plats" : estemAVins ? "vins" : "cocktails", arrActualizar, cartaGeneral.tipus));
         }, 200);
     };
 
@@ -128,7 +130,7 @@ const Panel = (props) => {
                                         component="span"
                                         style={{ marginRight: 20 }}
                                     >
-                                        {estemAPlats ? titolsCarta[valueTab][`titol_ca`] : titolsVins[valueTab][`titol_ca`]}
+                                        {estemAPlats ? titolsCarta[valueTab][`titol_ca`] : estemAVins ? titolsVins[valueTab][`titol_ca`] : titolsCocktails[valueTab][`titol_ca`]}
                                     </Typography>
                                 </Fragment>
                             } />
@@ -208,6 +210,7 @@ const Panel = (props) => {
                                                 index={index}
                                                 estemAPlats={estemAPlats}
                                                 estemAVins={estemAVins}
+                                                estemACocktails={estemACocktails}
                                                 valueTab={valueTab}
                                                 cartaGeneral={cartaGeneral}
                                                 produccio={produccio}
@@ -227,6 +230,7 @@ const Panel = (props) => {
                 <DialogTitols
                     estemAPlats={estemAPlats}
                     estemAVins={estemAVins}
+                    estemACocktails={estemACocktails}
                     valueTab={valueTab}
                 />
             )}
@@ -237,8 +241,9 @@ const Panel = (props) => {
                 <DialogItem
                     estemAPlats={estemAPlats}
                     estemAVins={estemAVins}
+                    estemACocktails={estemACocktails}
                     valueTab={valueTab}
-                    categoria={estemAVins ? titolsVins?.[valueTab][`titol_ca`] : null}
+                    categoria={estemAVins ? titolsVins?.[valueTab][`titol_ca`] : estemACocktails ? titolsCocktails?.[valueTab][`titol_ca`] : null}
                 />
             )}
             {openDialog === "produccio" && (

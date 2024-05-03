@@ -12,7 +12,8 @@ import {
     LocalBar,
     Restaurant,
     LockOpen,
-    SubdirectoryArrowRight
+    SubdirectoryArrowRight,
+    Nightlife
 } from '@mui/icons-material';
 import clsx from 'clsx';
 
@@ -64,6 +65,14 @@ const Menu = (props) => {
                                     <LocalBar />
                                 </ListItemIcon>
                                 <ListItemText primary='Vins' />
+                            </ListItemButton>
+                        </Link>
+                        <Link to="/cocktails" className={classes.link}>
+                            <ListItemButton>
+                                <ListItemIcon>
+                                    <Nightlife />
+                                </ListItemIcon>
+                                <ListItemText primary='Cocktails' />
                             </ListItemButton>
                         </Link>
                         <a rel="noopener noreferrer" href="https://carta.casaamalia.com" target="_blank" className={classes.link}>

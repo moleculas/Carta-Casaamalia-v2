@@ -40,7 +40,7 @@ import {
 } from '../redux/appDucks';
 
 //constantes
-const {  
+const {
     RUTA_SERVER: rutaServer,
     ALERGENS: alergens
 } = Constantes;
@@ -51,6 +51,7 @@ const Item = (props) => {
         index,
         estemAPlats,
         estemAVins,
+        estemACocktails,
         valueTab,
         cartaGeneral,
         produccio,
@@ -61,7 +62,7 @@ const Item = (props) => {
     const dispatch = useDispatch();
     const [expandedId, setExpandedId] = useState(-1);
     const [lightboxOpen, setLightboxOpen] = useState(false);
-    const rutaImatges = estemAPlats ? `${rutaServer}images/plats_imatges/` : `${rutaServer}images/vins_imatges/`;
+    const rutaImatges = estemAPlats ? `${rutaServer}images/plats_imatges/` : estemAVins ? `${rutaServer}images/vins_imatges/` : `${rutaServer}images/cocktails_imatges/`;
 
     //funciones
 
@@ -84,8 +85,8 @@ const Item = (props) => {
             draggableId={String(item.id)}
             index={index}
             type="list"
-            //isDragDisabled={item.visibilitat === "0" ? true : false}
-        >           
+        //isDragDisabled={item.visibilitat === "0" ? true : false}
+        >
             {(provided, snapshot) => (
                 <Card
                     className={snapshot.isDragging ? classes.dragItem : ""}
@@ -95,7 +96,7 @@ const Item = (props) => {
                     <div>
                         <Box className={classes.root1}
                             {...provided.dragHandleProps}
-                        >                            
+                        >
                             <Box style={{ display: 'flex', flexDirection: 'column' }}>
                                 <CardContent style={{ flex: '1 0 auto' }}>
                                     <Box style={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }}>
@@ -125,7 +126,7 @@ const Item = (props) => {
                                                     Al·lèrgens: {item.alergens.split(",").map((alergen) => alergens[alergen]).join(', ')}
                                                 </Typography>
                                             </Fragment>
-                                        ) : (
+                                        ) : estemAVins ? (
                                             <Fragment>
                                                 <Typography variant="body1" component="div">
                                                     Denominació: {item.denominacio}
@@ -144,6 +145,15 @@ const Item = (props) => {
                                                 </Typography>
                                                 <Typography variant="body1" component="div">
                                                     Zona: {!item.zona ? ('No') : zones?.find((zona) => zona.id === Number(item.zona)).titol_ca}
+                                                </Typography>
+                                            </Fragment>
+                                        ) : (
+                                            <Fragment>
+                                                <Typography variant="body2" component="div">
+                                                    {item.descripcio_ca}
+                                                </Typography>
+                                                <Typography variant="body1" component="div">
+                                                    Preu: {item.preu}
                                                 </Typography>
                                             </Fragment>
                                         )}
@@ -204,7 +214,7 @@ const Item = (props) => {
                                             abierto: true,
                                             titulo: "Advertència",
                                             mensaje: "Estàs segur que vols eliminar el registre?",
-                                            funcionSi: () => dispatch(eliminarItem(estemAPlats ? "plats" : "vins", cartaGeneral.tipus, item.realId, estemAPlats ? item.nom_ca : "", item.categoria))
+                                            funcionSi: () => dispatch(eliminarItem(estemAPlats ? "plats" : estemAVins ? "vins" : "cocktails", cartaGeneral.tipus, item.realId, estemAPlats ? item.nom_ca : "", item.categoria))
                                         }))}
                                     >
                                         Borrar

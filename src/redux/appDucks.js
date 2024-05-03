@@ -8,8 +8,10 @@ const dataInicial = {
     loadingApp: false,
     laDataCarta: null,
     laDataVins: null,
+    laDataCocktails: null,
     titolsCarta: null,
     titolsVins: null,
+    titolsCocktails: null,
     produccio: null,
     parades: null,
     zones: null,
@@ -65,8 +67,10 @@ const SET_ONESTEM = 'SET_ONESTEM';
 const SET_ALERTA = 'SET_ALERTA';
 const SET_LADATACARTA = "SET_LADATACARTA";
 const SET_LADATAVINS = "SET_LADATAVINS";
+const SET_LADATACOCKTAILS = "SET_LADATACOCKTAILS";
 const SET_TITOLSCARTA = "SET_TITOLSCARTA";
 const SET_TITOLSVINS = "SET_TITOLSVINS";
+const SET_TITOLSCOCKTAILS = "SET_TITOLSCOCKTAILS";
 const SET_PRODUCCIO = "SET_PRODUCCIO";
 const SET_PARADES = "SET_PARADES";
 const SET_ZONES = "SET_ZONES";
@@ -130,10 +134,14 @@ export default function appReducer(state = dataInicial, action) {
             return { ...state, laDataCarta: action.payload }
         case SET_LADATAVINS:
             return { ...state, laDataVins: action.payload }
+        case SET_LADATACOCKTAILS:
+            return { ...state, laDataCocktails: action.payload }
         case SET_TITOLSCARTA:
             return { ...state, titolsCarta: action.payload }
         case SET_TITOLSVINS:
             return { ...state, titolsVins: action.payload }
+        case SET_TITOLSCOCKTAILS:
+            return { ...state, titolsCocktails: action.payload }
         case SET_PRODUCCIO:
             return { ...state, produccio: action.payload }
         case SET_PARADES:
@@ -193,21 +201,19 @@ const determinaRutaServer = (configDir) => {
     } else if (configDir.format === "zones") {
         ruta = 'images/zones/'
     } else {
-        ruta = configDir.carta === 'normal'
-            ? configDir.tipus === 'plats'
-                ? configDir.format === 'normal'
-                    ? 'images/plats_imatges/'
-                    : 'images/header_plats/carta/'
-                : configDir.format === 'normal'
-                    ? 'images/vins_imatges/'
-                    : 'images/header_vins/carta/'
-            : configDir.tipus === 'plats'
-                ? configDir.format === 'normal'
-                    ? 'images/plats_imatges/'
-                    : 'images/header_plats/nadal/'
-                : configDir.format === 'normal'
-                    ? 'images/vins_imatges/'
-                    : 'images/header_vins/nadal/';
+        let rutaBase;
+        if (configDir.tipus === 'plats') {
+            rutaBase = 'images/plats_imatges/';
+        } else if (configDir.tipus === 'vins') {
+            rutaBase = 'images/vins_imatges/';
+        } else if (configDir.tipus === 'cocktails') {
+            rutaBase = 'images/cocktails_imatges/';
+        };
+        if (configDir.carta === 'normal') {
+            ruta = configDir.format === 'normal' ? rutaBase : `images/header_${configDir.tipus}/carta/`;
+        } else if (configDir.carta === 'nadal') {
+            ruta = configDir.format === 'normal' ? rutaBase : `images/header_${configDir.tipus}/nadal/`;
+        };     
     };
     return ruta
 };
@@ -259,6 +265,10 @@ export const obtenerDatosInicial = (tipo) => async (dispatch, getState) => {
                 dispatch({ type: SET_LADATAVINS, payload: items });
                 dispatch({ type: SET_TITOLSVINS, payload: titols });
                 dispatch({ type: SET_ZONES, payload: zones });
+                break;
+            case "cocktails":
+                dispatch({ type: SET_LADATACOCKTAILS, payload: items });
+                dispatch({ type: SET_TITOLSCOCKTAILS, payload: titols });
                 break;
             default:
                 break;
@@ -380,8 +390,10 @@ export const actualizarTitol = (objeto, datos) => async (dispatch, getState) => 
             });
             if (res.data[0].tipus === "plats") {
                 dispatch({ type: SET_TITOLSCARTA, payload: res.data });
-            } else {
+            } else if (res.data[0].tipus === "vins") {
                 dispatch({ type: SET_TITOLSVINS, payload: res.data });
+            } else {
+                dispatch({ type: SET_TITOLSCOCKTAILS, payload: res.data });
             };
             dispatch(ultimaIntervencion());
             dispatch({ type: LOADING_APP, payload: false });
@@ -447,8 +459,10 @@ export const actualizarItem = (objeto, datos, objDestacat) => async (dispatch, g
             });
             if (objeto === "plats") {
                 dispatch({ type: SET_LADATACARTA, payload: res.data });
-            } else {
+            } else if (objeto === "vins") {
                 dispatch({ type: SET_LADATAVINS, payload: res.data });
+            } else {
+                dispatch({ type: SET_LADATACOCKTAILS, payload: res.data });
             };
             dispatch(ultimaIntervencion());
             dispatch({ type: LOADING_APP, payload: false });
@@ -509,8 +523,10 @@ export const actualizarItemReordenar = (objeto, datos, objDestacat) => async (di
                 });
                 if (objeto === "plats") {
                     dispatch({ type: SET_LADATACARTA, payload: res2.data });
-                } else {
+                } else if (objeto === "vins") {
                     dispatch({ type: SET_LADATAVINS, payload: res2.data });
+                } else {
+                    dispatch({ type: SET_LADATACOCKTAILS, payload: res2.data });
                 };
                 dispatch(ultimaIntervencion());
                 dispatch({ type: LOADING_APP, payload: false });
@@ -543,6 +559,8 @@ export const actualizarCategoria = (objeto, datos, carta) => async (dispatch, ge
                 dispatch({ type: SET_LADATACARTA, payload: res.data });
             } else if (objeto === "vins") {
                 dispatch({ type: SET_LADATAVINS, payload: res.data });
+            } else if (objeto === "cocktails") {
+                dispatch({ type: SET_LADATACOCKTAILS, payload: res.data });
             } else {
                 dispatch({ type: SET_ZONES, payload: res.data });
             };
@@ -577,8 +595,10 @@ export const registrarItem = (objeto, datos, objDestacat) => async (dispatch, ge
             });
             if (objeto === "plats") {
                 dispatch({ type: SET_LADATACARTA, payload: res.data });
-            } else {
+            } else if (objeto === "vins") {
                 dispatch({ type: SET_LADATAVINS, payload: res.data });
+            } else {
+                dispatch({ type: SET_LADATACOCKTAILS, payload: res.data });
             };
             dispatch(ultimaIntervencion());
             dispatch({ type: LOADING_APP, payload: false });
@@ -622,8 +642,10 @@ export const eliminarItem = (objeto, carta, id, nom, categoria) => async (dispat
                 });
                 if (objeto === "plats") {
                     dispatch({ type: SET_LADATACARTA, payload: res2.data });
-                } else {
+                } else if (objeto === "vins") {
                     dispatch({ type: SET_LADATAVINS, payload: res2.data });
+                } else {
+                    dispatch({ type: SET_LADATACOCKTAILS, payload: res2.data });
                 };
                 dispatch(ultimaIntervencion());
                 dispatch({ type: LOADING_APP, payload: false });
@@ -896,7 +918,7 @@ export const eliminarImatge = (rutaImatge, configDir) => async (dispatch, getSta
         const esHeader = configDir.format === 'header' ? "si" : "no";
         const esEditable = configDir.format === 'produccio' || configDir.format === 'parades' || configDir.format === 'zones' ? "si" : "no";
         const newDirThumb = (esHeader === "no" && esEditable === "no")
-            ? newDir.replace(/images\/(plats_imatges|vins_imatges)\//, "images/$1/thumbnails/")
+            ? newDir.replace(/images\/(plats_imatges|vins_imatges|cocktails_imatges)\//, "images/$1/thumbnails/")
             : "no";
         formData.append("imatge", newDir);
         formData.append("thumb", newDirThumb);
@@ -1103,8 +1125,10 @@ export const resetApp = () => (dispatch, getState) => {
     const actions = [
         { type: SET_LADATACARTA, payload: null },
         { type: SET_LADATAVINS, payload: null },
+        { type: SET_LADATACOCKTAILS, payload: null },
         { type: SET_TITOLSCARTA, payload: null },
         { type: SET_TITOLSCARTA, payload: null },
+        { type: SET_TITOLSCOCKTAILS, payload: null },
         { type: SET_PRODUCCIO, payload: null },
         { type: SET_PARADES, payload: null },
         { type: SET_ZONES, payload: null },

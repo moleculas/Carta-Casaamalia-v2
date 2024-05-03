@@ -69,6 +69,7 @@ const Vins = (props) => {
     const [itemsCat2, setItemsCat2] = useState(null);
     const [itemsCat3, setItemsCat3] = useState(null);
     const [itemsCat4, setItemsCat4] = useState(null);
+    const [itemsCat5, setItemsCat5] = useState(null);
     const [openSnack, setOpenSnack] = useState(false);
     const [alert, setAlert] = useState({});
     const [valueTab, setValueTab] = useState(0);
@@ -85,7 +86,7 @@ const Vins = (props) => {
 
     useEffect(() => {
         if (laDataVins) {
-            const categorias = [1, 2, 3, 4];
+            const categorias = [1, 2, 3, 4, 5];
             const itemsPorCategoria = categorias.reduce((obj, cat) => {
                 obj[`p${cat}`] = laDataVins.filter((vi) => vi.categoria === cat)
                     .sort((a, b) => {
@@ -108,6 +109,7 @@ const Vins = (props) => {
                 cat === 2 && setItemsCat2(itemsPorCategoria[`p${cat}`]);
                 cat === 3 && setItemsCat3(itemsPorCategoria[`p${cat}`]);
                 cat === 4 && setItemsCat4(itemsPorCategoria[`p${cat}`]);
+                cat === 5 && setItemsCat5(itemsPorCategoria[`p${cat}`]);
                 if (i === valueTab) {
                     determinaItemsActivos(itemsPorCategoria[`p${cat}`]);
                 };
@@ -124,7 +126,8 @@ const Vins = (props) => {
             itemsCat1,
             itemsCat2,
             itemsCat3,
-            itemsCat4
+            itemsCat4,
+            itemsCat5
         ].every(item => item);
         if (allItemsReady && laDataVins) {
             setIsDataReady(true);
@@ -136,6 +139,7 @@ const Vins = (props) => {
         itemsCat2,
         itemsCat3,
         itemsCat4,
+        itemsCat5,
         laDataVins
     ]);
 
@@ -235,7 +239,7 @@ const Vins = (props) => {
     };
 
     const handleChangeTab = (event, newValue) => {
-        const arr = [itemsCat1, itemsCat2, itemsCat3, itemsCat4];
+        const arr = [itemsCat1, itemsCat2, itemsCat3, itemsCat4, itemsCat5];
         determinaItemsActivos(arr[newValue]);
         setValueTab(newValue);
     };
@@ -285,10 +289,11 @@ const Vins = (props) => {
                                     <Tab label={titolsVins[1][`titol_ca`]} {...a11yProps(1)} />
                                     <Tab label={titolsVins[2][`titol_ca`]} {...a11yProps(2)} />
                                     <Tab label={titolsVins[3][`titol_ca`]} {...a11yProps(3)} />
+                                    <Tab label={titolsVins[4][`titol_ca`]} {...a11yProps(4)} />
                                 </Tabs>
                             </AppBar>
                             {titolsVins.map((categoria, index) => {
-                                const itemsArr = [itemsCat1, itemsCat2, itemsCat3, itemsCat4];
+                                const itemsArr = [itemsCat1, itemsCat2, itemsCat3, itemsCat4, itemsCat5];
                                 return (
                                     <TabPanel
                                         key={`tabPanel-${index}`}
@@ -298,6 +303,7 @@ const Vins = (props) => {
                                         <Panel
                                             estemAPlats={false}
                                             estemAVins={true}
+                                            estemACocktails={false}
                                             items={itemsArr[index]}
                                             valueTab={valueTab}
                                         />
@@ -330,6 +336,7 @@ const Vins = (props) => {
                 <DialogPrincipal
                     estemAPlats={false}
                     estemAVins={true}
+                    estemACocktails={false}
                 />
             )}
         </div>

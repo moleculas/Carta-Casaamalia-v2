@@ -10,6 +10,7 @@ import {
 import Cajon from './Cajon';
 import Carta from './Carta';
 import Vins from './Vins';
+import Cocktails from './Cocktails';
 import Login from './Login';
 import Navbar from './Navbar';
 
@@ -55,6 +56,7 @@ const Contenedor = () => {
                     <Routes>
                         <Route path="/" exact element={<Carta />} />
                         <Route path="/vins" element={<Vins />} />
+                        <Route path="/cocktails" element={<Cocktails />} />
                         <Route path="/login" element={<Login />} />
                     </Routes>
                 </div>

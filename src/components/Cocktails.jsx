@@ -29,19 +29,17 @@ import {
     TabPanel,
     a11yProps,
     useForceUpdate,
-    Alert,
+    Alert,   
     orientacioTabs
 } from '../logica/logicaApp';
 import {
     obtenerDatosInicial,
     setAlertaAccion,
-    reseteaExitoAccion,
-    setItemsActivosCat,
-    setItemsActivoDestacats,
-    resetIIntervencioRegistre
+    reseteaExitoAccion,   
+    setItemsActivosCat
 } from '../redux/appDucks';
 
-const Carta = (props) => {
+const Cocktails = (props) => {
     const classes = Clases();
     let forceUpdate = useForceUpdate();
     const dispatch = useDispatch();
@@ -50,8 +48,8 @@ const Carta = (props) => {
     const usuari = useSelector(store => store.variablesUsuario.usuarioActivo.nombre);
     //const { websocket, sendMessageWebSocket } = useWebSocket(usuari);
     const {
-        laDataCarta,
-        titolsCarta,
+        laDataCocktails,
+        titolsCocktails,
         errorDeCarga,
         cartaGeneral,
         alerta,
@@ -64,18 +62,16 @@ const Carta = (props) => {
         openDialog,
         ultimaIntervencion,
         ordenarItemsExito,
-        canviCartaExito,
-        intervencioRegistre,
+        canviCartaExito
     } = useSelector(store => store.variablesApp);
     const openLoading = useSelector(store => store.variablesApp.loadingApp);
     const [itemsCat1, setItemsCat1] = useState(null);
     const [itemsCat2, setItemsCat2] = useState(null);
-    const [itemsCat3, setItemsCat3] = useState(null);
-    const [itemsCat4, setItemsCat4] = useState(null);
-    const [itemsCat5, setItemsCat5] = useState(null);
+    //const [itemsCat3, setItemsCat3] = useState(null);
+    //const [itemsCat4, setItemsCat4] = useState(null);
     const [openSnack, setOpenSnack] = useState(false);
     const [alert, setAlert] = useState({});
-    const [valueTab, setValueTab] = useState(1);
+    const [valueTab, setValueTab] = useState(0);
     const esDesktop = useMediaQuery(theme => theme.breakpoints.up('lg'));
     const [isDataReady, setIsDataReady] = useState(false);
 
@@ -87,20 +83,11 @@ const Carta = (props) => {
         };
     }, [logged]);
 
-    // useEffect(() => {
-    //     if (intervencioRegistre) {
-    //         if (websocket.readyState === 1) {
-    //             sendMessageWebSocket(usuari);
-    //         };
-    //         dispatch(resetIIntervencioRegistre());
-    //     };
-    // }, [intervencioRegistre]);
-
     useEffect(() => {
-        if (laDataCarta) {
-            const categorias = [1, 2, 3, 4, 5];
+        if (laDataCocktails) {
+            const categorias = [1, 2];
             const itemsPorCategoria = categorias.reduce((obj, cat) => {
-                obj[`p${cat}`] = laDataCarta.filter((plat) => plat.categoria === cat)
+                obj[`p${cat}`] = laDataCocktails.filter((cocktail) => cocktail.categoria === cat)
                     .sort((a, b) => {
                         return a.ordre - b.ordre;
                         // if (a.ordre === 0 && b.ordre === 0) {
@@ -117,34 +104,29 @@ const Carta = (props) => {
             }, {});
             for (let i = 0; i < categorias.length; i++) {
                 const cat = categorias[i];
-                if (cat === 1) {
-                    setItemsCat1(itemsPorCategoria[`p${cat}`]);
-                    determinaItemsActivosDestacats(itemsPorCategoria[`p${cat}`]);
-                };
+                cat === 1 && setItemsCat1(itemsPorCategoria[`p${cat}`]);
                 cat === 2 && setItemsCat2(itemsPorCategoria[`p${cat}`]);
-                cat === 3 && setItemsCat3(itemsPorCategoria[`p${cat}`]);
-                cat === 4 && setItemsCat4(itemsPorCategoria[`p${cat}`]);
-                cat === 5 && setItemsCat5(itemsPorCategoria[`p${cat}`]);
+                //cat === 3 && setItemsCat3(itemsPorCategoria[`p${cat}`]);
+                //cat === 4 && setItemsCat4(itemsPorCategoria[`p${cat}`]);
                 if (i === valueTab) {
                     determinaItemsActivos(itemsPorCategoria[`p${cat}`]);
                 };
             };
         } else {
             setIsDataReady(false);
-            dispatch(obtenerDatosInicial("plats"));
+            dispatch(obtenerDatosInicial("cocktails"));
             forceUpdate();
         };
-    }, [laDataCarta]);
+    }, [laDataCocktails]);
 
     useEffect(() => {
         const allItemsReady = [
             itemsCat1,
             itemsCat2,
-            itemsCat3,
-            itemsCat4,
-            itemsCat5
+            //itemsCat3,
+            //itemsCat4
         ].every(item => item);
-        if (allItemsReady && laDataCarta) {
+        if (allItemsReady && laDataCocktails) {
             setIsDataReady(true);
         } else {
             setIsDataReady(false);
@@ -152,10 +134,9 @@ const Carta = (props) => {
     }, [
         itemsCat1,
         itemsCat2,
-        itemsCat3,
-        itemsCat4,
-        itemsCat5,
-        laDataCarta
+        //itemsCat3,
+        //itemsCat4,
+        laDataCocktails
     ]);
 
     useEffect(() => {
@@ -240,12 +221,6 @@ const Carta = (props) => {
         dispatch(setItemsActivosCat(itemsActivos));
     };
 
-    const determinaItemsActivosDestacats = (array) => {
-        //const itemsActivos = array.filter(item => item.ordre > 0).length;
-        const itemsActivos = array.length;
-        dispatch(setItemsActivoDestacats(itemsActivos));
-    };
-
     const handleCloseSnack = (event, reason) => {
         if (reason === 'clickaway') {
             return;
@@ -260,12 +235,13 @@ const Carta = (props) => {
     };
 
     const handleChangeTab = (event, newValue) => {
-        const arr = [itemsCat1, itemsCat2, itemsCat3, itemsCat4, itemsCat5];
+        //const arr = [itemsCat1, itemsCat2, itemsCat3, itemsCat4];
+        const arr = [itemsCat1, itemsCat2];
         determinaItemsActivos(arr[newValue]);
         setValueTab(newValue);
     };
 
-    if (!isDataReady || !titolsCarta) {
+    if (!isDataReady || !titolsCocktails) {
         return null
     };
 
@@ -281,7 +257,7 @@ const Carta = (props) => {
                         mt={2}
                         className={classes.root1}
                     >
-                        <Typography variant="h5">{cartaGeneral?.nom_plats_ca}</Typography>
+                        <Typography variant="h5">{cartaGeneral?.nom_cocktails_ca}</Typography>
                         {cartaGeneral && (
                             <Chip
                                 label={`Actualitzat per última vegada el: ${ultimaIntervencion?.modificat ?? cartaGeneral.modificat} per ${((ultimaIntervencion ?? cartaGeneral).usuari).charAt(0).toUpperCase() + ((ultimaIntervencion ?? cartaGeneral).usuari).slice(1)}`}
@@ -305,35 +281,31 @@ const Carta = (props) => {
                                     orientation={orientacioTabs(esDesktop)}
                                     indicatorColor="secondary"
                                     textColor="inherit"
-                                    style={{ marginLeft: -90 }}
                                 >
-                                    {/* desactivat primer item */}
-                                    <Tab disabled label="" {...a11yProps(0)} />
-                                    <Tab label={titolsCarta[1][`titol_ca`]} {...a11yProps(1)} />
-                                    <Tab label={titolsCarta[2][`titol_ca`]} {...a11yProps(2)} />
-                                    <Tab label={titolsCarta[3][`titol_ca`]} {...a11yProps(3)} />
-                                    <Tab label={titolsCarta[4][`titol_ca`]} {...a11yProps(4)} />
+                                    <Tab label={titolsCocktails[0][`titol_ca`]} {...a11yProps(0)} />
+                                    <Tab label={titolsCocktails[1][`titol_ca`]} {...a11yProps(1)} />
+                                    {/* <Tab label={titolsCocktails[2][`titol_ca`]} {...a11yProps(2)} />
+                                    <Tab label={titolsCocktails[3][`titol_ca`]} {...a11yProps(3)} /> */}
                                 </Tabs>
                             </AppBar>
-                            {titolsCarta.slice(1).map((categoria, index) => {
-                                const itemsArr = [itemsCat1, itemsCat2, itemsCat3, itemsCat4, itemsCat5];
-                                const tabIndex = index + 1; // Ajustamos el índice para que coincida con los valores de los paneles
+                            {titolsCocktails.map((categoria, index) => {
+                                //const itemsArr = [itemsCat1, itemsCat2, itemsCat3, itemsCat4];
+                                const itemsArr = [itemsCat1, itemsCat2];
                                 return (
                                     <TabPanel
-                                        key={`tabPanel-${tabIndex}`}
+                                        key={`tabPanel-${index}`}
                                         value={valueTab}
-                                        index={tabIndex}
+                                        index={index}
                                     >
                                         <Panel
-                                            estemAPlats={true}
+                                            estemAPlats={false}
                                             estemAVins={false}
-                                            estemACocktails={false}
-                                            items={itemsArr[index + 1]}
+                                            estemACocktails={true}
+                                            items={itemsArr[index]}
                                             valueTab={valueTab}
-                                            itemsTotal={[...itemsCat2, ...itemsCat3, ...itemsCat4, ...itemsCat5]}
                                         />
                                     </TabPanel>
-                                );
+                                )
                             })}
                         </div>
                     </Box >
@@ -359,13 +331,13 @@ const Carta = (props) => {
             )}
             {openDialog === "principal" && (
                 <DialogPrincipal
-                    estemAPlats={true}
+                    estemAPlats={false}
                     estemAVins={false}
-                    estemACocktails={false}
+                    estemACocktails={true}
                 />
             )}
         </div>
     )
 }
 
-export default Carta
+export default Cocktails

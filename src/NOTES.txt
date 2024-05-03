@@ -12,8 +12,10 @@ Revisar per instal·lar en server: F:\Backup UTILITARI\RECURSOS\WEBSOCKETS\CONFI
 -CANVIS desenvolupament-producció: 
 canviar .env.production.local de 
 PUBLIC_URL=https://carta.casaamalia.com/test/gestio
+
 a
 PUBLIC_URL=https://carta.casaamalia.com/gestio
+PUBLIC_URL=https://carta.casaamalia.cat/gestio (si es testeja a casaamalia.cat)
 
 -en el cas que es produeixi a test primer: 
 -canviar const subdirectoriProduccio = '/gestio'; per const subdirectoriProduccio = '/test/gestio'; 

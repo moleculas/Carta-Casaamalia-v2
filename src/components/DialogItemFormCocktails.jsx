@@ -27,7 +27,6 @@ import {
 //constantes
 const {
     RUTA_SERVER: rutaServer,
-    PUNTUACIO: puntuacio
 } = Constantes;
 
 const DialogItemFormVins = (props) => {
@@ -41,12 +40,10 @@ const DialogItemFormVins = (props) => {
     const classes = Clases();
     const {
         modeDialog,
-        titolsVins,
-        cartaGeneral,
-        zones
+        titolsCocktails,
+        cartaGeneral
     } = useSelector(store => store.variablesApp);
-    const rutaImatges = `${rutaServer}images/vins_imatges/`;
-    const arrZones = zones.filter((obj) => obj.categoria === categoria);
+    const rutaImatges = `${rutaServer}images/cocktails_imatges/`;
 
     //funciones
 
@@ -59,7 +56,7 @@ const DialogItemFormVins = (props) => {
     };
 
     return (
-        <Fragment>                    
+        <Fragment>
             <TabPanel value={valueTab2} index={0}>
                 <FormControl
                     className={classes.form}
@@ -70,18 +67,6 @@ const DialogItemFormVins = (props) => {
                         className={classes.formInput}
                         defaultValue={valuesFormItem.nom}
                         onInput={handleChangeFormItem('nom')}
-                    />
-                </FormControl>
-                <FormControl
-                    className={classes.form}
-                    fullWidth
-                    sx={{ marginTop: "-4px" }}
-                >
-                    <InputLabel style={{ marginLeft: "-10px" }}>Denominació</InputLabel>
-                    <Input
-                        className={classes.formInput}
-                        defaultValue={valuesFormItem.denominacio}
-                        onInput={handleChangeFormItem('denominacio')}
                     />
                 </FormControl>
                 <FormControl
@@ -116,19 +101,6 @@ const DialogItemFormVins = (props) => {
                 <FormControl
                     className={classes.form}
                     fullWidth
-                    sx={{ marginTop: "-4px" }}
-                    disabled={true}
-                >
-                    <InputLabel style={{ marginLeft: "-10px" }}>Denominació</InputLabel>
-                    <Input
-                        className={classes.formInput}
-                        defaultValue={valuesFormItem.denominacio}
-                        onInput={handleChangeFormItem('denominacio')}
-                    />
-                </FormControl>
-                <FormControl
-                    className={classes.form}
-                    fullWidth
                     sx={{ paddingX: "2px", marginTop: "-4px" }}
                 >
                     <TextField
@@ -158,19 +130,6 @@ const DialogItemFormVins = (props) => {
                 <FormControl
                     className={classes.form}
                     fullWidth
-                    sx={{ marginTop: "-4px" }}
-                    disabled={true}
-                >
-                    <InputLabel style={{ marginLeft: "-10px" }}>Denominació</InputLabel>
-                    <Input
-                        className={classes.formInput}
-                        defaultValue={valuesFormItem.denominacio}
-                        onInput={handleChangeFormItem('denominacio')}
-                    />
-                </FormControl>
-                <FormControl
-                    className={classes.form}
-                    fullWidth
                     sx={{ paddingX: "2px", marginTop: "-4px" }}
                 >
                     <TextField
@@ -195,19 +154,6 @@ const DialogItemFormVins = (props) => {
                         className={classes.formInput}
                         defaultValue={valuesFormItem.nom}
                         onInput={handleChangeFormItem('nom')}
-                    />
-                </FormControl>
-                <FormControl
-                    className={classes.form}
-                    fullWidth
-                    sx={{ marginTop: "-4px" }}
-                    disabled={true}
-                >
-                    <InputLabel style={{ marginLeft: "-10px" }}>Denominació</InputLabel>
-                    <Input
-                        className={classes.formInput}
-                        defaultValue={valuesFormItem.denominacio}
-                        onInput={handleChangeFormItem('denominacio')}
                     />
                 </FormControl>
                 <FormControl
@@ -247,69 +193,6 @@ const DialogItemFormVins = (props) => {
                         <FormControl
                             fullWidth
                             className={classes.form}
-                            sx={{ mt: -1 }}
-                            variant="standard"
-                        >
-                            <InputLabel>Puntuació Parker</InputLabel>
-                            <Select
-                                fullWidth
-                                //displayEmpty
-                                value={valuesFormItem.puntuacio_pr}
-                                onChange={handleChangeFormItem('puntuacio_pr')}
-                            >
-                                {puntuacio.map((option) => (
-                                    <MenuItem key={option.value} value={option.value}>
-                                        {option.label}
-                                    </MenuItem>
-                                ))}
-                            </Select>
-                        </FormControl>
-                        <FormControl
-                            fullWidth
-                            className={classes.form}
-                            sx={{ mt: 1 }}
-                            variant="standard"
-                        >
-                            <InputLabel>Puntuació Peñín</InputLabel>
-                            <Select
-                                fullWidth
-                                //displayEmpty
-                                value={valuesFormItem.puntuacio_pe}
-                                onChange={handleChangeFormItem('puntuacio_pe')}
-                            >
-                                {puntuacio.map((option) => (
-                                    <MenuItem key={option.value} value={option.value}>
-                                        {option.label}
-                                    </MenuItem>
-                                ))}
-                            </Select>
-                        </FormControl>
-                        <FormControl
-                            fullWidth
-                            className={classes.form}
-                            sx={{ mt: 1 }}
-                            variant="standard"
-                        >
-                            <InputLabel>Zona</InputLabel>
-                            <Select
-                                fullWidth
-                                //displayEmpty
-                                value={valuesFormItem.zona}
-                                onChange={handleChangeFormItem('zona')}
-                            >
-                                <MenuItem value="No">
-                                    No
-                                </MenuItem>
-                                {arrZones.map((option) => (
-                                    <MenuItem key={option.id} value={option.id}>
-                                        {option.titol_ca}
-                                    </MenuItem>
-                                ))}
-                            </Select>
-                        </FormControl>
-                        <FormControl
-                            fullWidth
-                            className={classes.form}
                             sx={{ mt: 1, mb: 3 }}
                             variant="standard"
                             disabled={Boolean(modeDialog === "creacio")}
@@ -318,13 +201,13 @@ const DialogItemFormVins = (props) => {
                             <Select
                                 fullWidth
                                 //displayEmpty
-                                value={modeDialog === "creacio" ? ((valueTab + 1) - 5) : valuesFormItem.categoria}
+                                value={modeDialog === "creacio" ? ((valueTab + 1) - 10) : valuesFormItem.categoria}
                                 onChange={handleChangeFormItem('categoria')}
                             >
-                                {titolsVins.map(categoria => (
+                                {titolsCocktails.map(categoria => (
                                     <MenuItem
-                                        key={`categoria-${categoria.id - 5}`}                                      
-                                        value={cartaGeneral.tipus === "nadal" ? categoria.id - 17 : categoria.id -5} //parche categoria
+                                        key={`categoria-${categoria.id - 10}`}
+                                        value={cartaGeneral.tipus === "nadal" ? categoria.id - 22 : categoria.id - 10} //parche categoria
                                     >
                                         {categoria.titol_ca}
                                     </MenuItem>

@@ -61,7 +61,7 @@ const Medis = (props) => {
                     dispatch(obtenerImatges(openMedis.dir));
                     setConfigDir({
                         carta: openMedis.dir.includes("nadal") ? "nadal" : "normal",
-                        tipus: openMedis.dir.includes("vins") ? "vins" : openMedis.dir.includes("plats") ? "plats" : "-",
+                        tipus: openMedis.dir.includes("vins") ? "vins" : openMedis.dir.includes("plats") ? "plats" : openMedis.dir.includes("cocktails") ? "cocktails" : "-",
                         format: openMedis.dir.includes("header") ? "header" :
                             openMedis.dir.includes("produccio") ? "produccio" :
                                 openMedis.dir.includes("parades") ? "parades" :

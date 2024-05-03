@@ -37,7 +37,8 @@ const {
 const DialogPrincipal = (props) => {
     const {
         estemAPlats,
-        estemAVins
+        estemAVins,
+        estemACocktails
     } = props;
     const classes = Clases();
     const dispatch = useDispatch();
@@ -49,18 +50,18 @@ const DialogPrincipal = (props) => {
     const usuari = useSelector(store => store.variablesUsuario.usuarioActivo.nombre);
     const [initialStateValuesFormPrincipal, setInitialStateValuesFormPrincipal] = useState(
         {
-            ca: estemAPlats ? cartaGeneral.nom_plats_ca : cartaGeneral.nom_vins_ca,
-            es: estemAPlats ? cartaGeneral.nom_plats_es : cartaGeneral.nom_vins_es,
-            en: estemAPlats ? cartaGeneral.nom_plats_en : cartaGeneral.nom_vins_en,
-            fr: estemAPlats ? cartaGeneral.nom_plats_fr : cartaGeneral.nom_vins_fr,
-            imatge: estemAPlats ? cartaGeneral.imatge_plats : cartaGeneral.imatge_vins
+            ca: estemAPlats ? cartaGeneral.nom_plats_ca : estemAVins ? cartaGeneral.nom_vins_ca : cartaGeneral.nom_cocktails_ca,
+            es: estemAPlats ? cartaGeneral.nom_plats_es : estemAVins ? cartaGeneral.nom_vins_es : cartaGeneral.nom_cocktails_es,
+            en: estemAPlats ? cartaGeneral.nom_plats_en : estemAVins ? cartaGeneral.nom_vins_en : cartaGeneral.nom_cocktails_en,
+            fr: estemAPlats ? cartaGeneral.nom_plats_fr : estemAVins ? cartaGeneral.nom_vins_fr : cartaGeneral.nom_cocktails_fr,
+            imatge: estemAPlats ? cartaGeneral.imatge_plats : estemAVins ? cartaGeneral.imatge_vins : cartaGeneral.imatge_cocktails
         }
     );
     const [valuesFormPrincipal, setValuesFormPrincipal] = useState(initialStateValuesFormPrincipal);
     const [lightboxOpen, setLightboxOpen] = useState(false);
     const [botonDesactivadoRegistrar, setBotonDesactivadoRegistrar] = useState(true);
     const subRuta = cartaGeneral?.tipus === "normal" ? "carta/" : "nadal/";
-    const rutaImatges = `${rutaServer}images/header_${estemAPlats ? "plats" : "vins"}/${subRuta}`;
+    const rutaImatges = `${rutaServer}images/header_${estemAPlats ? "plats" : estemAVins ? "vins" : "cocktails"}/${subRuta}`;
 
     //useEffect
 
@@ -112,6 +113,13 @@ const DialogPrincipal = (props) => {
                 nom_vins_fr: valuesFormPrincipal.fr,
                 imatge_vins: valuesFormPrincipal.imatge,
             })),
+            ...(estemACocktails && ({
+                nom_cocktails_ca: valuesFormPrincipal.ca,
+                nom_cocktails_es: valuesFormPrincipal.es,
+                nom_cocktails_en: valuesFormPrincipal.en,
+                nom_cocktails_fr: valuesFormPrincipal.fr,
+                imatge_cocktails: valuesFormPrincipal.imatge,
+            })),
             modificat: new Date(),
             usuari
         };
@@ -133,7 +141,7 @@ const DialogPrincipal = (props) => {
             >
                 <Box style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
                     <DialogTitle id="alert-dialog-title2">
-                        {estemAPlats ? 'Editar títol carta' : 'Editar títol vins'}
+                        {estemAPlats ? 'Editar títol carta' : estemAVins ? 'Editar títol vins' : 'Editar títol cocktails'}
                     </DialogTitle>
                 </Box>
                 <DialogContent>

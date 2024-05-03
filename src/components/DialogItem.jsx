@@ -25,6 +25,7 @@ import {
 //carga componentes
 import DialogItemFormPlats from './DialogItemFormPlats';
 import DialogItemFormVins from './DialogItemFormVins';
+import DialogItemFormCocktails from './DialogItemFormCocktails';
 
 //estilos
 import Clases from "../clases";
@@ -52,6 +53,7 @@ const DialogItem = (props) => {
     const {
         estemAPlats,
         estemAVins,
+        estemACocktails,
         valueTab,
         categoria
     } = props;
@@ -94,6 +96,9 @@ const DialogItem = (props) => {
                 puntuacio_pr: modeDialog === "edicio" ? item.puntuacio_pr : "0",
                 puntuacio_pe: modeDialog === "edicio" ? item.puntuacio_pe : "0",
                 zona: modeDialog === "edicio" ? (item.zona ? item.zona : "No") : "No"
+            })),
+            ...(estemACocktails && ({
+                nom: modeDialog === "edicio" ? item.nom : ""
             })),
             preu: modeDialog === "edicio" ? item.preu : "",
             visibilitat: modeDialog === "edicio" ? item.visibilitat : "1",
@@ -174,7 +179,7 @@ const DialogItem = (props) => {
 
     const processarDadesItem = (e) => {
         e.preventDefault();
-        const objTabla = estemAPlats ? "plats" : "vins";
+        const objTabla = estemAPlats ? "plats" : estemAVins ? "vins" : "cocktails";
         const retornaItemsNum = (array, string) => {
             const index = array.indexOf(string);
             return index === -1 ? index : String(index);
@@ -209,6 +214,9 @@ const DialogItem = (props) => {
                 puntuacio_pe: valuesFormItem.puntuacio_pe,
                 zona: valuesFormItem.zona === "No" ? null : valuesFormItem.zona
             })),
+            ...(estemACocktails && ({
+                nom: valuesFormItem.nom
+            })),
             descripcio_ca: valuesFormItem.descripcio_ca,
             descripcio_es: valuesFormItem.descripcio_es,
             descripcio_en: valuesFormItem.descripcio_en,
@@ -222,28 +230,12 @@ const DialogItem = (props) => {
         modeDialog === 'creacio' ? revisarRegistresCreacio(objTabla, replaceSingleQuotes(objDatos)) : revisarRegistresEdicio(objTabla, replaceSingleQuotes(objDatos));
     };
 
-    const revisarRegistresEdicio = (objTabla, objDatos) => {
-        const objDestacat = !estemAPlats || (objDatos.visibilitat === "1" && objDatos.destacat === "1") ? { estado: "si", ordre: itemsActivosDestacats + 1 } : { estado: "no", ordre: null };
-        const sameVisibilityAndCategory = objDatos.visibilitat === item.visibilitat && objDatos.categoria === item.categoria;
-        if (sameVisibilityAndCategory) {
-            dispatch(actualizarItem(objTabla, objDatos, objDestacat));
-        } else {
-            if (objDatos.categoria !== item.categoria) {
-                //objDatos.ordre = 0;
-                objDatos.visibilitat = "0";
-            } else {
-                //objDatos.ordre = objDatos.visibilitat === "1" ? itemsActivosCat + 1 : 0;
-            };
-            dispatch(actualizarItem(objTabla, objDatos, objDestacat));
-            //dispatch(actualizarItemReordenar(objTabla, objDatos, objDestacat));
-        };
-        handleCloseDialogItem();
-    };
-
-    const revisarRegistresCreacio = (objTabla, objDatos) => {
+    const revisarRegistresBlanc = (objDatos) => {
         const keysToCheck = estemAPlats ?
             ['nom_ca', 'nom_es', 'nom_en', 'nom_fr', 'descripcio_ca', 'descripcio_es', 'descripcio_en', 'descripcio_fr', 'imatge', 'preu'] :
-            ['nom', 'denominacio', 'descripcio_ca', 'descripcio_es', 'descripcio_en', 'descripcio_fr', 'imatge', 'preu'];
+            estemAVins ?
+                ['nom', 'denominacio', 'descripcio_ca', 'descripcio_es', 'descripcio_en', 'descripcio_fr', 'imatge', 'preu'] :
+                ['nom', 'descripcio_ca', 'descripcio_es', 'descripcio_en', 'descripcio_fr', 'imatge', 'preu'];
         if (!keysToCheck.every(key => objDatos[key])) {
             dispatch(setAlertaAccion({
                 abierto: true,
@@ -251,15 +243,60 @@ const DialogItem = (props) => {
                 tipo: 'error',
                 posicio: 'esquerra'
             }));
-            return;
+            return false;
         };
-        objDatos.categoria = valueTab + 1;
-        //objDatos.ordre = objDatos.visibilitat === "1" ? itemsActivosCat + 1 : 0;
-        objDatos.ordre = itemsActivosCat + 1;
-        objDatos.carta = cartaGeneral.tipus;
-        const objDestacat = !estemAPlats || (objDatos.visibilitat === "1" && objDatos.destacat === "1") ? { estado: "si", ordre: itemsActivosDestacats + 1 } : { estado: "no", ordre: null };
-        dispatch(registrarItem(objTabla, objDatos, objDestacat));
-        handleCloseDialogItem();
+        return true;
+    };
+
+    const revisarRegistresEdicio = (objTabla, objDatos) => {
+        const revisioRegistres = revisarRegistresBlanc(objDatos);
+        if (!revisioRegistres) {
+            dispatch(setAlertaAccion({
+                abierto: true,
+                mensaje: "Falten dades per omplir revisa el formulari.",
+                tipo: 'error',
+                posicio: 'esquerra'
+            }));
+            return;
+        } else {
+            const objDestacat = !estemAPlats || (objDatos.visibilitat === "1" && objDatos.destacat === "1") ? { estado: "si", ordre: itemsActivosDestacats + 1 } : { estado: "no", ordre: null };
+            const sameVisibilityAndCategory = objDatos.visibilitat === item.visibilitat && objDatos.categoria === item.categoria;
+            if (sameVisibilityAndCategory) {
+                dispatch(actualizarItem(objTabla, objDatos, objDestacat));
+            } else {
+                if (objDatos.categoria !== item.categoria) {
+                    //objDatos.ordre = 0;
+                    objDatos.visibilitat = "0";
+                    estemAVins && (objDatos.zona = null);
+                } else {
+                    //objDatos.ordre = objDatos.visibilitat === "1" ? itemsActivosCat + 1 : 0;
+                };
+                dispatch(actualizarItem(objTabla, objDatos, objDestacat));
+                //dispatch(actualizarItemReordenar(objTabla, objDatos, objDestacat));
+            };
+            handleCloseDialogItem();
+        };
+    };
+
+    const revisarRegistresCreacio = (objTabla, objDatos) => {
+        const revisioRegistres = revisarRegistresBlanc(objDatos);
+        if (!revisioRegistres) {
+            dispatch(setAlertaAccion({
+                abierto: true,
+                mensaje: "Falten dades per omplir revisa el formulari.",
+                tipo: 'error',
+                posicio: 'esquerra'
+            }));
+            return;
+        } else {
+            objDatos.categoria = valueTab + 1;
+            //objDatos.ordre = objDatos.visibilitat === "1" ? itemsActivosCat + 1 : 0;
+            objDatos.ordre = itemsActivosCat + 1;
+            objDatos.carta = cartaGeneral.tipus;
+            const objDestacat = !estemAPlats || (objDatos.visibilitat === "1" && objDatos.destacat === "1") ? { estado: "si", ordre: itemsActivosDestacats + 1 } : { estado: "no", ordre: null };
+            dispatch(registrarItem(objTabla, objDatos, objDestacat));
+            handleCloseDialogItem();
+        };
     };
 
     if (!valuesFormItem) {
@@ -332,6 +369,15 @@ const DialogItem = (props) => {
                         )}
                         {estemAVins && (
                             <DialogItemFormVins
+                                valueTab={valueTab}
+                                valueTab2={valueTab2}
+                                valuesFormItem={valuesFormItem}
+                                setValuesFormItem={setValuesFormItem}
+                                categoria={categoria}
+                            />
+                        )}
+                        {estemACocktails && (
+                            <DialogItemFormCocktails
                                 valueTab={valueTab}
                                 valueTab2={valueTab2}
                                 valuesFormItem={valuesFormItem}

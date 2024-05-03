@@ -1,6 +1,6 @@
 import { createTheme } from "@mui/material";
 //import { unstable_createMuiStrictModeTheme as createMuiTheme } from '@material-ui/core/styles'
-import { blueGrey, red } from '@mui/material/colors';
+import { blueGrey, red, blue } from '@mui/material/colors';
 
 const theme = createTheme({
     palette: {
@@ -9,6 +9,7 @@ const theme = createTheme({
             light: '#f6dc9d',
             dark: '#e0b652'
         },
+        // primary: blue, //mode test casaamalia.cat
         secondary: blueGrey,
         error: red,
         custom: {

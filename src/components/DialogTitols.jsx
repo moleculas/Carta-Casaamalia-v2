@@ -38,6 +38,7 @@ const DialogTitols = (props) => {
     const {
         estemAPlats,
         estemAVins,
+        estemACocktails,
         valueTab
     } = props;
     const classes = Clases();
@@ -46,25 +47,26 @@ const DialogTitols = (props) => {
         openDialog,
         titolsCarta,
         titolsVins,
+        titolsCocktails,
         cartaGeneral,
         imatgeSeleccionada
     } = useSelector(store => store.variablesApp);
     const usuari = useSelector(store => store.variablesUsuario.usuarioActivo.nombre);
-    const length = estemAPlats ? 5 : 4;
+    const length = estemAPlats ? 5 : estemAVins ? 5 : 2;
     const [initialStateValuesFormTitols, setInitialStateValuesFormTitols] = useState(
         Array.from({ length }).map((_, i) => ({
-            ca: estemAPlats ? titolsCarta[i].titol_ca : titolsVins[i].titol_ca,
-            es: estemAPlats ? titolsCarta[i].titol_es : titolsVins[i].titol_es,
-            en: estemAPlats ? titolsCarta[i].titol_en : titolsVins[i].titol_en,
-            fr: estemAPlats ? titolsCarta[i].titol_fr : titolsVins[i].titol_fr,
-            imatge: estemAPlats ? titolsCarta[i].imatge : titolsVins[i].imatge
+            ca: estemAPlats ? titolsCarta[i].titol_ca : estemAVins ? titolsVins[i].titol_ca : titolsCocktails[i].titol_ca,
+            es: estemAPlats ? titolsCarta[i].titol_es : estemAVins ? titolsVins[i].titol_es : titolsCocktails[i].titol_es,
+            en: estemAPlats ? titolsCarta[i].titol_en : estemAVins ? titolsVins[i].titol_en : titolsCocktails[i].titol_en,
+            fr: estemAPlats ? titolsCarta[i].titol_fr : estemAVins ? titolsVins[i].titol_fr : titolsCocktails[i].titol_fr,
+            imatge: estemAPlats ? titolsCarta[i].imatge : estemAVins ? titolsVins[i].imatge : titolsCocktails[i].imatge
         }))
     );
     const [valuesFormTitols, setValuesFormTitols] = useState(initialStateValuesFormTitols);
     const [lightboxOpen, setLightboxOpen] = useState(false);
     const [botonDesactivadoRegistrar, setBotonDesactivadoRegistrar] = useState(true);
     const subRuta = cartaGeneral.tipus === "normal" ? "carta/" : "nadal/";
-    const rutaImatges = `${rutaServer}images/header_${estemAPlats ? "plats" : "vins"}/${subRuta}`;
+    const rutaImatges = `${rutaServer}images/header_${estemAPlats ? "plats" : estemAVins ? "vins" : "cocktails"}/${subRuta}`;
 
     //useEffect
 
@@ -122,6 +124,9 @@ const DialogTitols = (props) => {
                 ...(estemAVins && ({
                     ...titolsVins[index]
                 })),
+                ...(estemACocktails && ({
+                    ...titolsCocktails[index]
+                })),
                 modificat: new Date(),
                 ...(valueTab === index && ({
                     titol_ca: valuesFormTitols[valueTab].ca,
@@ -151,7 +156,7 @@ const DialogTitols = (props) => {
             >
                 <Box style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
                     <DialogTitle id="alert-dialog-title2">
-                        {estemAPlats ? 'Editar títol imatge carta' : 'Editar títol imatge vins'}
+                        {estemAPlats ? 'Editar títol imatge carta' : estemAVins ? 'Editar títol imatge vins' : 'Editar títol imatge cocktails'}
                     </DialogTitle>
                 </Box>
                 <DialogContent>
