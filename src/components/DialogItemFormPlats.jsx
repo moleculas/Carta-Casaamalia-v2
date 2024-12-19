@@ -345,11 +345,12 @@ const DialogItemFormPlats = (props) => {
                                 onChange={handleChangeFormItem('categoria')}
                             >
                                 {titolsCarta.map(categoria => {
-                                    if ((cartaGeneral.tipus === "nadal" && categoria.id !== 10) || (cartaGeneral.tipus === "normal" && categoria.id !== 1)) {
+                                    if ((cartaGeneral.tipus === "nadal" && categoria.id !== 13) || (cartaGeneral.tipus === "normal" && categoria.id !== 1)) {
                                         return (
                                             <MenuItem
                                                 key={`categoria-${categoria.id}`}
-                                                value={cartaGeneral.tipus === "nadal" ? categoria.id - 9 : categoria.id} //parche categoria
+                                                //value={cartaGeneral.tipus === "nadal" ? categoria.id - 9 : categoria.id} //parche categoria         
+                                                value={cartaGeneral.tipus === "nadal" ? categoria.id - 12 : categoria.id} //parche categoria                                              
                                             >
                                                 {categoria.titol_ca}
                                             </MenuItem>
@@ -367,7 +368,7 @@ const DialogItemFormPlats = (props) => {
                         />
                     </Box>
                 </Stack>
-            </Box>
+            </Box>         
         </Fragment>
     )
 }
