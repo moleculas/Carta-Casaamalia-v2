@@ -54,6 +54,7 @@ const Panel = (props) => {
         parades,
         zones
     } = useSelector(store => store.variablesApp);
+    const usuari = useSelector(store => store.variablesUsuario.usuarioActivo.nombre);
     const [itemsOrdenables, setItemsOrdenables] = useState(null);
     const [anchorElMenu, setAnchorElMenu] = useState(null);
 
@@ -110,7 +111,7 @@ const Panel = (props) => {
     };
 
     return (
-        <div>
+        <div>           
             <Stack direction="row" alignItems="center" spacing={2} mt={1} mb={4}>
                 <Box sx={{ width: "75%" }}>
                     <Box style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -216,6 +217,7 @@ const Panel = (props) => {
                                                 produccio={produccio}
                                                 parades={parades}
                                                 zones={zones}
+                                                usuari={usuari}
                                             />
                                         </Box>
                                     )

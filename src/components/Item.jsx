@@ -56,7 +56,8 @@ const Item = (props) => {
         cartaGeneral,
         produccio,
         parades,
-        zones
+        zones,
+        usuari
     } = props;
     const classes = Clases();
     const dispatch = useDispatch();
@@ -216,6 +217,7 @@ const Item = (props) => {
                                             mensaje: "Estàs segur que vols eliminar el registre?",
                                             funcionSi: () => dispatch(eliminarItem(estemAPlats ? "plats" : estemAVins ? "vins" : "cocktails", cartaGeneral.tipus, item.realId, estemAPlats ? item.nom_ca : "", item.categoria))
                                         }))}
+                                        disabled={usuari !== "admin"}
                                     >
                                         Borrar
                                     </Button>
