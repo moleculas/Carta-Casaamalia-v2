@@ -52,7 +52,7 @@ const DialogTitols = (props) => {
         imatgeSeleccionada
     } = useSelector(store => store.variablesApp);
     const usuari = useSelector(store => store.variablesUsuario.usuarioActivo.nombre);
-    const length = estemAPlats ? 5 : estemAVins ? 5 : 2;
+    const length = estemAPlats ? 5 : estemAVins ? 6 : 2;
     const [initialStateValuesFormTitols, setInitialStateValuesFormTitols] = useState(
         Array.from({ length }).map((_, i) => ({
             ca: estemAPlats ? titolsCarta[i].titol_ca : estemAVins ? titolsVins[i].titol_ca : titolsCocktails[i].titol_ca,

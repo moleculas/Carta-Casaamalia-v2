@@ -51,7 +51,7 @@ const DialogItemFormVins = (props) => {
     //funciones
 
     const handleChangeFormItem = (prop) => (event) => {
-        //console.log(event.target.value)
+        console.log(event.target.value)
         setValuesFormItem({
             ...valuesFormItem,
             [prop]: event.target.value
@@ -324,7 +324,7 @@ const DialogItemFormVins = (props) => {
                                 {titolsVins.map(categoria => (
                                     <MenuItem
                                         key={`categoria-${categoria.id - 5}`}                                      
-                                        value={cartaGeneral.tipus === "nadal" ? categoria.id - 17 : categoria.id -5} //parche categoria
+                                        value={cartaGeneral.tipus === "nadal" ? categoria.id - 18 : categoria.id -5} //parche categoria
                                     >
                                         {categoria.titol_ca}
                                     </MenuItem>

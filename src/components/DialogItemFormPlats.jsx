@@ -350,7 +350,7 @@ const DialogItemFormPlats = (props) => {
                                             <MenuItem
                                                 key={`categoria-${categoria.id}`}
                                                 //value={cartaGeneral.tipus === "nadal" ? categoria.id - 9 : categoria.id} //parche categoria         
-                                                value={cartaGeneral.tipus === "nadal" ? categoria.id - 12 : categoria.id} //parche categoria                                              
+                                                value={cartaGeneral.tipus === "nadal" ? categoria.id - 13 : categoria.id} //parche categoria                                              
                                             >
                                                 {categoria.titol_ca}
                                             </MenuItem>

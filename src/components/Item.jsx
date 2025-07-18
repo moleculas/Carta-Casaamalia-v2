@@ -65,6 +65,12 @@ const Item = (props) => {
     const [lightboxOpen, setLightboxOpen] = useState(false);
     const rutaImatges = estemAPlats ? `${rutaServer}images/plats_imatges/` : estemAVins ? `${rutaServer}images/vins_imatges/` : `${rutaServer}images/cocktails_imatges/`;
 
+    // Array de usuarios autorizados para acceder a Plats
+    const usuariosAutorizados = ['admin', 'sergi', 'jordi', 'antonio', 'berta', 'josep', 'mariona', 'sergi_nadal', 'olga'];
+
+    // Verificar si el usuario actual está autorizado
+    const conPermisos = usuariosAutorizados.includes(usuari);
+
     //funciones
 
     const handleExpandClick = index => {
@@ -205,6 +211,7 @@ const Item = (props) => {
                                         color={cartaGeneral?.tipus === "nadal" ? "custom" : "primary"}
                                         variant="contained"
                                         onClick={() => (dispatch(setItemEditar({ index, item })), dispatch(setModeDialog("edicio")), dispatch(setOpenDialog("item")))}
+                                        disabled={!conPermisos}
                                     >
                                         Editar
                                     </Button>

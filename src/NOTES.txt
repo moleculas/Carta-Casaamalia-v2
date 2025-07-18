@@ -50,3 +50,5 @@ de
 RewriteRule ^ test/gestio/index.html [L]
 a
 RewriteRule ^ gestio/index.html [L]
+
+- Si s'afegeixen / modifiquen categories s'han d'actualitzar les xifres al Select DialogItemForm{Tipus}. Ajustar provant si al canviar surt la categoria vigent.

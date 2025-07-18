@@ -29,13 +29,13 @@ import {
     TabPanel,
     a11yProps,
     useForceUpdate,
-    Alert,   
+    Alert,
     orientacioTabs
 } from '../logica/logicaApp';
 import {
     obtenerDatosInicial,
     setAlertaAccion,
-    reseteaExitoAccion,   
+    reseteaExitoAccion,
     setItemsActivosCat
 } from '../redux/appDucks';
 
@@ -70,6 +70,7 @@ const Vins = (props) => {
     const [itemsCat3, setItemsCat3] = useState(null);
     const [itemsCat4, setItemsCat4] = useState(null);
     const [itemsCat5, setItemsCat5] = useState(null);
+    const [itemsCat6, setItemsCat6] = useState(null);
     const [openSnack, setOpenSnack] = useState(false);
     const [alert, setAlert] = useState({});
     const [valueTab, setValueTab] = useState(0);
@@ -86,7 +87,7 @@ const Vins = (props) => {
 
     useEffect(() => {
         if (laDataVins) {
-            const categorias = [1, 2, 3, 4, 5];
+            const categorias = [1, 2, 3, 4, 5, 6];
             const itemsPorCategoria = categorias.reduce((obj, cat) => {
                 obj[`p${cat}`] = laDataVins.filter((vi) => vi.categoria === cat)
                     .sort((a, b) => {
@@ -110,6 +111,7 @@ const Vins = (props) => {
                 cat === 3 && setItemsCat3(itemsPorCategoria[`p${cat}`]);
                 cat === 4 && setItemsCat4(itemsPorCategoria[`p${cat}`]);
                 cat === 5 && setItemsCat5(itemsPorCategoria[`p${cat}`]);
+                cat === 6 && setItemsCat6(itemsPorCategoria[`p${cat}`]);
                 if (i === valueTab) {
                     determinaItemsActivos(itemsPorCategoria[`p${cat}`]);
                 };
@@ -127,7 +129,8 @@ const Vins = (props) => {
             itemsCat2,
             itemsCat3,
             itemsCat4,
-            itemsCat5
+            itemsCat5,
+            itemsCat6
         ].every(item => item);
         if (allItemsReady && laDataVins) {
             setIsDataReady(true);
@@ -140,6 +143,7 @@ const Vins = (props) => {
         itemsCat3,
         itemsCat4,
         itemsCat5,
+        itemsCat6,
         laDataVins
     ]);
 
@@ -219,7 +223,7 @@ const Vins = (props) => {
 
     //funciones  
 
-    const determinaItemsActivos = (array) => {
+    const determinaItemsActivos = (array) => {   
         //const itemsActivos = array.filter(item => item.ordre > 0).length;
         const itemsActivos = array.length;
         dispatch(setItemsActivosCat(itemsActivos));
@@ -239,7 +243,7 @@ const Vins = (props) => {
     };
 
     const handleChangeTab = (event, newValue) => {
-        const arr = [itemsCat1, itemsCat2, itemsCat3, itemsCat4, itemsCat5];
+        const arr = [itemsCat1, itemsCat2, itemsCat3, itemsCat4, itemsCat5, itemsCat6];
         determinaItemsActivos(arr[newValue]);
         setValueTab(newValue);
     };
@@ -250,6 +254,7 @@ const Vins = (props) => {
 
     return (
         <div>
+            {/* {console.log(titolsVins)} */}
             <Backdrop className={classes.loading} open={openLoading} style={{ zIndex: 9999 }}>
                 <CircularProgress color="inherit" />
             </Backdrop>
@@ -290,10 +295,11 @@ const Vins = (props) => {
                                     <Tab label={titolsVins[2][`titol_ca`]} {...a11yProps(2)} />
                                     <Tab label={titolsVins[3][`titol_ca`]} {...a11yProps(3)} />
                                     <Tab label={titolsVins[4][`titol_ca`]} {...a11yProps(4)} />
+                                    <Tab label={titolsVins[5][`titol_ca`]} {...a11yProps(5)} />
                                 </Tabs>
                             </AppBar>
                             {titolsVins.map((categoria, index) => {
-                                const itemsArr = [itemsCat1, itemsCat2, itemsCat3, itemsCat4, itemsCat5];
+                                const itemsArr = [itemsCat1, itemsCat2, itemsCat3, itemsCat4, itemsCat5, itemsCat6];
                                 return (
                                     <TabPanel
                                         key={`tabPanel-${index}`}

@@ -32,18 +32,24 @@ const Menu = (props) => {
     const logged = useSelector(store => store.variablesUsuario.activo);
     const usuari = useSelector(store => store.variablesUsuario.usuarioActivo.nombre);
 
+    // Array de usuarios autorizados para acceder a Plats
+    const usuariosAutorizados = ['admin', 'sergi', 'jordi', 'antonio', 'berta', 'josep', 'mariona', 'sergi_nadal', 'olga'];
+
+    // Verificar si el usuario actual está autorizado
+    const conPermisos = usuariosAutorizados.includes(usuari);
+
     //funciones
 
     const tancarSessio = () => {
         dispatch(logoutUsuarioAccion()).then(({ payload }) => {
-            if (payload) {              
+            if (payload) {
                 dispatch(resetApp());
                 localStorage.clear();
                 navigate('/login');
             }
         })
     };
-    
+
     const [tiempoAlarma, timer] = useInactivityTimer(tancarSessio, logged, usuari);
 
     return (
@@ -51,14 +57,23 @@ const Menu = (props) => {
             <List component='nav'>
                 {logged ? (
                     <div>
-                        <Link to="/" className={classes.link}>
-                            <ListItemButton>
+                        {conPermisos ? (
+                            <Link to="/" className={classes.link}>
+                                <ListItemButton>
+                                    <ListItemIcon>
+                                        <Restaurant />
+                                    </ListItemIcon>
+                                    <ListItemText primary='Plats' />
+                                </ListItemButton>
+                            </Link>
+                        ) : (
+                            <ListItemButton disabled>
                                 <ListItemIcon>
                                     <Restaurant />
                                 </ListItemIcon>
                                 <ListItemText primary='Plats' />
                             </ListItemButton>
-                        </Link>
+                        )}
                         <Link to="/vins" className={classes.link}>
                             <ListItemButton>
                                 <ListItemIcon>

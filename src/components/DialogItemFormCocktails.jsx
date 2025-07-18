@@ -207,7 +207,7 @@ const DialogItemFormVins = (props) => {
                                 {titolsCocktails.map(categoria => (
                                     <MenuItem
                                         key={`categoria-${categoria.id - 10}`}
-                                        value={cartaGeneral.tipus === "nadal" ? categoria.id - 22 : categoria.id - 10} //parche categoria
+                                        value={cartaGeneral.tipus === "nadal" ? categoria.id - 24 : categoria.id - 11} //parche categoria
                                     >
                                         {categoria.titol_ca}
                                     </MenuItem>
