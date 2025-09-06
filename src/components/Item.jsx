@@ -57,7 +57,8 @@ const Item = (props) => {
         produccio,
         parades,
         zones,
-        usuari
+        usuari,
+        subcategoriesVins
     } = props;
     const classes = Clases();
     const dispatch = useDispatch();
@@ -145,11 +146,28 @@ const Item = (props) => {
                                                     Preu: {item.preu}
                                                 </Typography>
                                                 <Typography variant="body1" component="div">
+                                                    <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                                                        Subcategoria: {subcategoriesVins.find(subcat => subcat.id === item.subcategoria)?.nom_ca || "No"}
+                                                        {item.subcategoria && subcategoriesVins.find(subcat => subcat.id === item.subcategoria) && (
+                                                            <Box
+                                                                sx={{
+                                                                    width: 16,
+                                                                    height: 16,
+                                                                    borderRadius: '50%',
+                                                                    backgroundColor: subcategoriesVins.find(subcat => subcat.id === item.subcategoria)?.color,
+                                                                    marginLeft: 1,
+                                                                    border: '1px solid rgba(0, 0, 0, 0.2)'
+                                                                }}
+                                                            />
+                                                        )}
+                                                    </Box>
+                                                </Typography>
+                                                {/* <Typography variant="body1" component="div">
                                                     Puntuació Parker: {retornaPuntuacioParker(item.puntuacio_pr)}
                                                 </Typography>
                                                 <Typography variant="body1" component="div">
                                                     Puntuació Peñín: {item.puntuacio_pe === '0' ? ('No') : (item.puntuacio_pe + ' punts')}
-                                                </Typography>
+                                                </Typography> */}
                                                 <Typography variant="body1" component="div">
                                                     Zona: {!item.zona ? ('No') : zones?.find((zona) => zona.id === Number(item.zona)).titol_ca}
                                                 </Typography>

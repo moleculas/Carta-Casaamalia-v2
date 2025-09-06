@@ -43,15 +43,15 @@ const DialogItemFormVins = (props) => {
         modeDialog,
         titolsVins,
         cartaGeneral,
-        zones
+        zones,
+        subcategoriesVins
     } = useSelector(store => store.variablesApp);
     const rutaImatges = `${rutaServer}images/vins_imatges/`;
     const arrZones = zones.filter((obj) => obj.categoria === categoria);
 
     //funciones
 
-    const handleChangeFormItem = (prop) => (event) => {
-        console.log(event.target.value)
+    const handleChangeFormItem = (prop) => (event) => {       
         setValuesFormItem({
             ...valuesFormItem,
             [prop]: event.target.value
@@ -59,7 +59,7 @@ const DialogItemFormVins = (props) => {
     };
 
     return (
-        <Fragment>                    
+        <Fragment>
             <TabPanel value={valueTab2} index={0}>
                 <FormControl
                     className={classes.form}
@@ -244,7 +244,7 @@ const DialogItemFormVins = (props) => {
                                 onInput={handleChangeFormItem('preu')}
                             />
                         </FormControl>
-                        <FormControl
+                        {/* <FormControl
                             fullWidth
                             className={classes.form}
                             sx={{ mt: -1 }}
@@ -280,6 +280,42 @@ const DialogItemFormVins = (props) => {
                                 {puntuacio.map((option) => (
                                     <MenuItem key={option.value} value={option.value}>
                                         {option.label}
+                                    </MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl> */}
+                        <FormControl
+                            fullWidth
+                            className={classes.form}
+                            sx={{ mt: -1 }}
+                            variant="standard"
+                        >
+                            <InputLabel>Subcategoria</InputLabel>
+                            <Select
+                                fullWidth
+                                //displayEmpty
+                                value={valuesFormItem.subcategoria}
+                                onChange={handleChangeFormItem('subcategoria')}
+                            >
+                                <MenuItem value="No">
+                                    No
+                                </MenuItem>
+                                {subcategoriesVins.map((option) => (
+                                    <MenuItem key={option.id} value={option.id}>
+                                        <Box sx={{ display: 'flex', alignItems: 'center', width: '100%' }}>
+                                            {option.nom_ca}
+                                            <Box
+                                                sx={{
+                                                    width: 20,
+                                                    height: 20,
+                                                    marginRight: "10px",
+                                                    borderRadius: '50%',
+                                                    backgroundColor: option.color,
+                                                    marginLeft: 'auto',
+                                                    border: '1px solid rgba(0, 0, 0, 0.2)'
+                                                }}
+                                            />
+                                        </Box>
                                     </MenuItem>
                                 ))}
                             </Select>
@@ -323,8 +359,8 @@ const DialogItemFormVins = (props) => {
                             >
                                 {titolsVins.map(categoria => (
                                     <MenuItem
-                                        key={`categoria-${categoria.id - 5}`}                                      
-                                        value={cartaGeneral.tipus === "nadal" ? categoria.id - 18 : categoria.id -5} //parche categoria
+                                        key={`categoria-${categoria.id - 5}`}
+                                        value={cartaGeneral.tipus === "nadal" ? categoria.id - 18 : categoria.id - 5} //parche categoria
                                     >
                                         {categoria.titol_ca}
                                     </MenuItem>

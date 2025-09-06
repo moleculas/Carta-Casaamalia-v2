@@ -95,6 +95,7 @@ const DialogItem = (props) => {
                 denominacio: modeDialog === "edicio" ? item.denominacio : "",
                 puntuacio_pr: modeDialog === "edicio" ? item.puntuacio_pr : "0",
                 puntuacio_pe: modeDialog === "edicio" ? item.puntuacio_pe : "0",
+                subcategoria: modeDialog === "edicio" ? (item.subcategoria ? item.subcategoria : "No") : "No",
                 zona: modeDialog === "edicio" ? (item.zona ? item.zona : "No") : "No"
             })),
             ...(estemACocktails && ({
@@ -151,6 +152,7 @@ const DialogItem = (props) => {
                     denominacio: "",
                     puntuacio_pr: "0",
                     puntuacio_pe: "0",
+                    subcategoria: "No",
                     zona: "No",
                 })),
                 preu: "",
@@ -212,6 +214,7 @@ const DialogItem = (props) => {
                 denominacio: valuesFormItem.denominacio,
                 puntuacio_pr: valuesFormItem.puntuacio_pr,
                 puntuacio_pe: valuesFormItem.puntuacio_pe,
+                subcategoria: valuesFormItem.subcategoria === "No" ? null : valuesFormItem.subcategoria,
                 zona: valuesFormItem.zona === "No" ? null : valuesFormItem.zona
             })),
             ...(estemACocktails && ({

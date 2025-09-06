@@ -52,7 +52,8 @@ const Panel = (props) => {
         itemsActivosCat,
         produccio,
         parades,
-        zones
+        zones,
+        subcategoriesVins
     } = useSelector(store => store.variablesApp);
     const usuari = useSelector(store => store.variablesUsuario.usuarioActivo.nombre);
     const [itemsOrdenables, setItemsOrdenables] = useState(null);
@@ -218,6 +219,7 @@ const Panel = (props) => {
                                                 parades={parades}
                                                 zones={zones}
                                                 usuari={usuari}
+                                                subcategoriesVins={subcategoriesVins}
                                             />
                                         </Box>
                                     )

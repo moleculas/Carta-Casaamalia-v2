@@ -15,6 +15,7 @@ const dataInicial = {
     produccio: null,
     parades: null,
     zones: null,
+    subcategoriesVins: null,
     cartaGeneral: null,
     onEstem: null,
     alerta: {
@@ -74,6 +75,7 @@ const SET_TITOLSCOCKTAILS = "SET_TITOLSCOCKTAILS";
 const SET_PRODUCCIO = "SET_PRODUCCIO";
 const SET_PARADES = "SET_PARADES";
 const SET_ZONES = "SET_ZONES";
+const SET_SUBCATEGORIESVINS = "SET_SUBCATEGORIESVINS";
 const SET_OPENLOADING = "SET_OPENLOADING";
 const SET_OPENDIALOG = "SET_OPENDIALOG";
 const SET_OPENMEDIS = "SET_OPENMEDIS";
@@ -148,6 +150,8 @@ export default function appReducer(state = dataInicial, action) {
             return { ...state, parades: action.payload }
         case SET_ZONES:
             return { ...state, zones: action.payload }
+        case SET_SUBCATEGORIESVINS:
+            return { ...state, subcategoriesVins: action.payload }
         case SET_OPENLOADING:
             return { ...state, loadingApp: action.payload.valor }
         case SET_OPENDIALOG:
@@ -213,7 +217,7 @@ const determinaRutaServer = (configDir) => {
             ruta = configDir.format === 'normal' ? rutaBase : `images/header_${configDir.tipus}/carta/`;
         } else if (configDir.carta === 'nadal') {
             ruta = configDir.format === 'normal' ? rutaBase : `images/header_${configDir.tipus}/nadal/`;
-        };     
+        };
     };
     return ruta
 };
@@ -229,18 +233,21 @@ export const obtenerDatosInicial = (tipo) => async (dispatch, getState) => {
         const formData2 = new FormData();
         const formData3 = new FormData();
         const formData4 = new FormData();
+        const formData5 = new FormData();
         const carta = cartaGeneral?.tipus || (await obtenerCartaInicial(formData1));
         formData1.append("carta", carta);
         formData1.append("tipo", tipo);
         formData2.append("objeto", "produccio");
         formData3.append("objeto", "parades");
         formData4.append("objeto", "zones");
-        const [items, titols, produccio, parades, zones] = await Promise.all([
+        formData5.append("objeto", "subcategories_vins");
+        const [items, titols, produccio, parades, zones, subcategoriesVins] = await Promise.all([
             obtenerCarta(formData1),
             obtenerTitulos(formData1),
             tipo === "plats" ? obtenerProduccio(formData2) : null,
             tipo === "plats" ? obtenerParades(formData3) : null,
-            tipo === "vins" ? obtenerZones(formData4) : null
+            tipo === "vins" ? obtenerZones(formData4) : null,
+            tipo === "vins" ? obtenerSubcategoriesVins(formData5) : null
         ]);
         switch (tipo) {
             case "plats":
@@ -265,6 +272,7 @@ export const obtenerDatosInicial = (tipo) => async (dispatch, getState) => {
                 dispatch({ type: SET_LADATAVINS, payload: items });
                 dispatch({ type: SET_TITOLSVINS, payload: titols });
                 dispatch({ type: SET_ZONES, payload: zones });
+                dispatch({ type: SET_SUBCATEGORIESVINS, payload: subcategoriesVins });
                 break;
             case "cocktails":
                 dispatch({ type: SET_LADATACOCKTAILS, payload: items });
@@ -315,6 +323,12 @@ export const obtenerDatosInicial = (tipo) => async (dispatch, getState) => {
         return data;
     };
     async function obtenerZones(formData) {
+        const { data } = await axios.post(rutaApi + "obtener_editable.php", formData, {
+            headers: { "Content-Type": "multipart/form-data" },
+        });
+        return data;
+    };
+    async function obtenerSubcategoriesVins(formData) {
         const { data } = await axios.post(rutaApi + "obtener_editable.php", formData, {
             headers: { "Content-Type": "multipart/form-data" },
         });
@@ -1132,6 +1146,7 @@ export const resetApp = () => (dispatch, getState) => {
         { type: SET_PRODUCCIO, payload: null },
         { type: SET_PARADES, payload: null },
         { type: SET_ZONES, payload: null },
+        { type: SET_SUBCATEGORIESVINS, payload: null },
         { type: SET_OPENMEDIS, payload: { estado: false, dir: null } },
         { type: SET_OPENDIALOG, payload: null },
         { type: SET_IMATGES, payload: null },
