@@ -33,7 +33,7 @@ const Menu = (props) => {
     const usuari = useSelector(store => store.variablesUsuario.usuarioActivo.nombre);
 
     // Array de usuarios autorizados para acceder a Plats
-    const usuariosAutorizados = ['admin', 'sergi', 'jordi', 'antonio', 'berta', 'josep', 'mariona', 'sergi_nadal', 'olga'];
+    const usuariosAutorizados = ['admin', 'sergi', 'jordi', 'antonio', 'berta', 'josep', 'mariona', 'sergi_nadal', 'olga', 'regular'];
 
     // Verificar si el usuario actual está autorizado
     const conPermisos = usuariosAutorizados.includes(usuari);

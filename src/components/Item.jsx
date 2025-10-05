@@ -58,7 +58,8 @@ const Item = (props) => {
         parades,
         zones,
         usuari,
-        subcategoriesVins
+        subcategoriesVins,
+        isDraggable = true
     } = props;
     const classes = Clases();
     const dispatch = useDispatch();
@@ -67,7 +68,7 @@ const Item = (props) => {
     const rutaImatges = estemAPlats ? `${rutaServer}images/plats_imatges/` : estemAVins ? `${rutaServer}images/vins_imatges/` : `${rutaServer}images/cocktails_imatges/`;
 
     // Array de usuarios autorizados para acceder a Plats
-    const usuariosAutorizados = ['admin', 'sergi', 'jordi', 'antonio', 'berta', 'josep', 'mariona', 'sergi_nadal', 'olga'];
+    const usuariosAutorizados = ['admin', 'sergi', 'jordi', 'antonio', 'berta', 'josep', 'mariona', 'sergi_nadal', 'olga', 'regular'];
 
     // Verificar si el usuario actual está autorizado
     const conPermisos = usuariosAutorizados.includes(usuari);
@@ -93,7 +94,8 @@ const Item = (props) => {
             draggableId={String(item.id)}
             index={index}
             type="list"
-        //isDragDisabled={item.visibilitat === "0" ? true : false}
+            //isDragDisabled={item.visibilitat === "0" ? true : false}
+            isDragDisabled={!isDraggable}
         >
             {(provided, snapshot) => (
                 <Card
@@ -162,6 +164,11 @@ const Item = (props) => {
                                                         )}
                                                     </Box>
                                                 </Typography>
+                                                {item.descripcio_sub_ca && (
+                                                    <Typography variant="body2" component="div">
+                                                        Descripció subcategoria: {item.descripcio_sub_ca}
+                                                    </Typography>
+                                                )}
                                                 {/* <Typography variant="body1" component="div">
                                                     Puntuació Parker: {retornaPuntuacioParker(item.puntuacio_pr)}
                                                 </Typography>
@@ -242,7 +249,7 @@ const Item = (props) => {
                                             mensaje: "Estàs segur que vols eliminar el registre?",
                                             funcionSi: () => dispatch(eliminarItem(estemAPlats ? "plats" : estemAVins ? "vins" : "cocktails", cartaGeneral.tipus, item.realId, estemAPlats ? item.nom_ca : "", item.categoria))
                                         }))}
-                                        disabled={usuari !== "admin"}
+                                        disabled={usuari !== "admin" && usuari !== "sergi" && usuari !== "sergi_nadal"}
                                     >
                                         Borrar
                                     </Button>

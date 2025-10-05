@@ -96,7 +96,11 @@ const DialogItem = (props) => {
                 puntuacio_pr: modeDialog === "edicio" ? item.puntuacio_pr : "0",
                 puntuacio_pe: modeDialog === "edicio" ? item.puntuacio_pe : "0",
                 subcategoria: modeDialog === "edicio" ? (item.subcategoria ? item.subcategoria : "No") : "No",
-                zona: modeDialog === "edicio" ? (item.zona ? item.zona : "No") : "No"
+                zona: modeDialog === "edicio" ? (item.zona ? item.zona : "No") : "No",
+                descripcio_sub_ca: modeDialog === "edicio" ? item.descripcio_sub_ca : "",
+                descripcio_sub_es: modeDialog === "edicio" ? item.descripcio_sub_es : "",
+                descripcio_sub_en: modeDialog === "edicio" ? item.descripcio_sub_en : "",
+                descripcio_sub_fr: modeDialog === "edicio" ? item.descripcio_sub_fr : "",
             })),
             ...(estemACocktails && ({
                 nom: modeDialog === "edicio" ? item.nom : ""
@@ -154,6 +158,10 @@ const DialogItem = (props) => {
                     puntuacio_pe: "0",
                     subcategoria: "No",
                     zona: "No",
+                    descripcio_sub_ca: "",
+                    descripcio_sub_es: "",
+                    descripcio_sub_en: "",
+                    descripcio_sub_fr: "",
                 })),
                 preu: "",
                 visibilitat: "1",
@@ -215,7 +223,11 @@ const DialogItem = (props) => {
                 puntuacio_pr: valuesFormItem.puntuacio_pr,
                 puntuacio_pe: valuesFormItem.puntuacio_pe,
                 subcategoria: valuesFormItem.subcategoria === "No" ? null : valuesFormItem.subcategoria,
-                zona: valuesFormItem.zona === "No" ? null : valuesFormItem.zona
+                zona: valuesFormItem.zona === "No" ? null : valuesFormItem.zona,
+                descripcio_sub_ca: valuesFormItem.descripcio_sub_ca === "" ? null : valuesFormItem.descripcio_sub_ca,
+                descripcio_sub_es: valuesFormItem.descripcio_sub_es === "" ? null : valuesFormItem.descripcio_sub_es,
+                descripcio_sub_en: valuesFormItem.descripcio_sub_en === "" ? null : valuesFormItem.descripcio_sub_en,
+                descripcio_sub_fr: valuesFormItem.descripcio_sub_fr === "" ? null : valuesFormItem.descripcio_sub_fr,
             })),
             ...(estemACocktails && ({
                 nom: valuesFormItem.nom
@@ -233,12 +245,31 @@ const DialogItem = (props) => {
         modeDialog === 'creacio' ? revisarRegistresCreacio(objTabla, replaceSingleQuotes(objDatos)) : revisarRegistresEdicio(objTabla, replaceSingleQuotes(objDatos));
     };
 
+    // const revisarRegistresBlanc = (objDatos) => {
+    //     const keysToCheck = estemAPlats ?
+    //         ['nom_ca', 'nom_es', 'nom_en', 'nom_fr', 'descripcio_ca', 'descripcio_es', 'descripcio_en', 'descripcio_fr', 'imatge', 'preu'] :
+    //         estemAVins ?
+    //             ['nom', 'denominacio', 'descripcio_ca', 'descripcio_es', 'descripcio_en', 'descripcio_fr', 'imatge', 'preu'] :
+    //             ['nom', 'descripcio_ca', 'descripcio_es', 'descripcio_en', 'descripcio_fr', 'imatge', 'preu'];
+    //     if (!keysToCheck.every(key => objDatos[key])) {
+    //         dispatch(setAlertaAccion({
+    //             abierto: true,
+    //             mensaje: "Falten dades per omplir revisa el formulari.",
+    //             tipo: 'error',
+    //             posicio: 'esquerra'
+    //         }));
+    //         return false;
+    //     };
+    //     return true;
+    // };
+
     const revisarRegistresBlanc = (objDatos) => {
         const keysToCheck = estemAPlats ?
             ['nom_ca', 'nom_es', 'nom_en', 'nom_fr', 'descripcio_ca', 'descripcio_es', 'descripcio_en', 'descripcio_fr', 'imatge', 'preu'] :
             estemAVins ?
                 ['nom', 'denominacio', 'descripcio_ca', 'descripcio_es', 'descripcio_en', 'descripcio_fr', 'imatge', 'preu'] :
                 ['nom', 'descripcio_ca', 'descripcio_es', 'descripcio_en', 'descripcio_fr', 'imatge', 'preu'];
+
         if (!keysToCheck.every(key => objDatos[key])) {
             dispatch(setAlertaAccion({
                 abierto: true,
@@ -248,6 +279,23 @@ const DialogItem = (props) => {
             }));
             return false;
         };
+
+        // Validación específica para vins: descripciones de subcategoría
+        if (estemAVins) {
+            const subDescripcions = ['descripcio_sub_ca', 'descripcio_sub_es', 'descripcio_sub_en', 'descripcio_sub_fr'];
+            const algunaExiste = subDescripcions.some(key => objDatos[key]);
+            const todasExisten = subDescripcions.every(key => objDatos[key]);
+
+            if (algunaExiste && !todasExisten) {
+                dispatch(setAlertaAccion({
+                    abierto: true,
+                    mensaje: "Si omples una descripció de subcategoria, has d'omplir-les totes (CA, ES, EN, FR).",
+                    tipo: 'error',
+                    posicio: 'esquerra'
+                }));
+                return false;
+            }
+        }
         return true;
     };
 
@@ -273,7 +321,7 @@ const DialogItem = (props) => {
                     estemAVins && (objDatos.zona = null);
                 } else {
                     //objDatos.ordre = objDatos.visibilitat === "1" ? itemsActivosCat + 1 : 0;
-                };
+                };               
                 dispatch(actualizarItem(objTabla, objDatos, objDestacat));
                 //dispatch(actualizarItemReordenar(objTabla, objDatos, objDestacat));
             };

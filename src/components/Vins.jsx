@@ -254,7 +254,7 @@ const Vins = (props) => {
 
     return (
         <div>
-            {/* {console.log(subcategoriesVins)} */}
+            {/* {console.log(laDataVins)} */}
             <Backdrop className={classes.loading} open={openLoading} style={{ zIndex: 9999 }}>
                 <CircularProgress color="inherit" />
             </Backdrop>

@@ -58,6 +58,10 @@ const Panel = (props) => {
     const usuari = useSelector(store => store.variablesUsuario.usuarioActivo.nombre);
     const [itemsOrdenables, setItemsOrdenables] = useState(null);
     const [anchorElMenu, setAnchorElMenu] = useState(null);
+    
+    // Definir usuarios autorizados para drag and drop
+    const usuariosAutorizados = ["admin", "sergi", "sergi_nadal"];
+    const puedeArrastrar = usuariosAutorizados.includes(usuari);
 
     //useEffect
 
@@ -83,6 +87,11 @@ const Panel = (props) => {
     };
 
     const onDragEnd = (result) => {
+        // Verificar si el usuario tiene permisos
+        if (!puedeArrastrar) {
+            return;
+        }
+        
         const { source, destination } = result;
         if (!destination) {
             return;
@@ -99,7 +108,6 @@ const Panel = (props) => {
         const arrActualizar = nuevoArr.map((item, index) => ({
             ...item,
             id: item.realId,
-            //ordre: item.ordre > 0 ? index + 1 : 0
             ordre: index + 1
         }));
         setTimeout(() => {
@@ -201,7 +209,7 @@ const Panel = (props) => {
                 <Typography variant="body1">No hi ha ítems.</Typography>
             ) : (
                 <DragDropContext onDragEnd={onDragEnd}>
-                    <Droppable droppableId="list" type="list" direction="vertical">
+                    <Droppable droppableId="list" type="list" direction="vertical" isDropDisabled={!puedeArrastrar}>
                         {(provided) => (
                             <div ref={provided.innerRef}>
                                 {itemsOrdenables.map((item, index) => {
@@ -220,6 +228,7 @@ const Panel = (props) => {
                                                 zones={zones}
                                                 usuari={usuari}
                                                 subcategoriesVins={subcategoriesVins}
+                                                isDraggable={puedeArrastrar}
                                             />
                                         </Box>
                                     )

@@ -99,6 +99,21 @@ const DialogItemFormVins = (props) => {
                         onInput={handleChangeFormItem('descripcio_ca')}
                     />
                 </FormControl>
+                <FormControl
+                    className={classes.form}
+                    fullWidth
+                    sx={{ paddingX: "2px", marginTop: "18px" }}
+                >
+                    <TextField
+                        className={classes.formInput}
+                        label="Descripció Subcategoria [Ca]"
+                        multiline
+                        maxRows={4}
+                        variant="standard"
+                        defaultValue={valuesFormItem.descripcio_sub_ca}
+                        onInput={handleChangeFormItem('descripcio_sub_ca')}
+                    />
+                </FormControl>
             </TabPanel>
             <TabPanel value={valueTab2} index={1}>
                 <FormControl
@@ -139,6 +154,21 @@ const DialogItemFormVins = (props) => {
                         variant="standard"
                         defaultValue={valuesFormItem.descripcio_es}
                         onInput={handleChangeFormItem('descripcio_es')}
+                    />
+                </FormControl>
+                <FormControl
+                    className={classes.form}
+                    fullWidth
+                    sx={{ paddingX: "2px", marginTop: "18px" }}
+                >
+                    <TextField
+                        className={classes.formInput}
+                        label="Descripció Subcategoria [Es]"
+                        multiline
+                        maxRows={4}
+                        variant="standard"
+                        defaultValue={valuesFormItem.descripcio_sub_es}
+                        onInput={handleChangeFormItem('descripcio_sub_es')}
                     />
                 </FormControl>
             </TabPanel>
@@ -183,6 +213,21 @@ const DialogItemFormVins = (props) => {
                         onInput={handleChangeFormItem('descripcio_en')}
                     />
                 </FormControl>
+                <FormControl
+                    className={classes.form}
+                    fullWidth
+                    sx={{ paddingX: "2px", marginTop: "18px" }}
+                >
+                    <TextField
+                        className={classes.formInput}
+                        label="Descripció Subcategoria [En]"
+                        multiline
+                        maxRows={4}
+                        variant="standard"
+                        defaultValue={valuesFormItem.descripcio_sub_en}
+                        onInput={handleChangeFormItem('descripcio_sub_en')}
+                    />
+                </FormControl>
             </TabPanel>
             <TabPanel value={valueTab2} index={3}>
                 <FormControl
@@ -223,6 +268,21 @@ const DialogItemFormVins = (props) => {
                         variant="standard"
                         defaultValue={valuesFormItem.descripcio_fr}
                         onInput={handleChangeFormItem('descripcio_fr')}
+                    />
+                </FormControl>
+                <FormControl
+                    className={classes.form}
+                    fullWidth
+                    sx={{ paddingX: "2px", marginTop: "18px" }}
+                >
+                    <TextField
+                        className={classes.formInput}
+                        label="Descripció Subcategoria [Fr]"
+                        multiline
+                        maxRows={4}
+                        variant="standard"
+                        defaultValue={valuesFormItem.descripcio_sub_fr}
+                        onInput={handleChangeFormItem('descripcio_sub_fr')}
                     />
                 </FormControl>
             </TabPanel>

@@ -451,7 +451,7 @@ export const actualizarPrincipal = (objeto, datos) => async (dispatch, getState)
     }
 };
 
-export const actualizarItem = (objeto, datos, objDestacat) => async (dispatch, getState) => {
+export const actualizarItem = (objeto, datos, objDestacat) => async (dispatch, getState) => {    
     dispatch({ type: LOADING_APP, payload: true });
     try {
         const losDatos = JSON.stringify(datos);
